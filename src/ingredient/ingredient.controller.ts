@@ -10,6 +10,7 @@ import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
 
+@ApiUseTags('ingredient')
 @Controller('ingredient')
 export class IngredientController {
   private readonly ingredientService: IngredientService;
@@ -19,6 +20,9 @@ export class IngredientController {
   }
 
   @Get(':id')
+  @ApiOperation({ title: 'Retrieve a single ingredient by ID' })
+  @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully located' })
+  @ApiNotFoundResponse({ description: 'An ingredient of the requested ID could not be found' })
   public async getOne(@Param('id') id: number): Promise<Ingredient> {
     try {
       const ingredient = await this.ingredientService.findById(id);
