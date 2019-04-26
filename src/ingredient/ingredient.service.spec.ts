@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 
@@ -31,7 +32,7 @@ describe('IngredientService', (): void => {
     it('retrives a single ingredient by ID', async (): Promise<void> => {
       const newIngredient: Ingredient = {
         id: 1,
-        name: '',
+        name: 'Brown Sugar',
         updatedAt: new Date(),
         createdAt: new Date(),
         deletedAt: null,
@@ -44,9 +45,24 @@ describe('IngredientService', (): void => {
         .toHaveBeenCalledWith({
           where: {
             id: ingredient.id,
+            deletedAt: null,
           },
         });
       expect(ingredient).toBeTruthy();
+    });
+    it('omits deleted ingredients from query results', async (): Promise<void> => {
+      const where = {
+        id: 1,
+        deletedAt: null,
+      };
+      IngredientRepository.findOneOrFail
+        .mockRejectedValue(new EntityNotFoundError(Ingredient, { where }));
+
+      await expect(service.findById(1)).rejects
+        .toThrowError(EntityNotFoundError);
+
+      expect(IngredientRepository.findOneOrFail)
+        .toHaveBeenCalledWith({ where });
     });
   });
 });

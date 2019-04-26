@@ -13,11 +13,16 @@ export class IngredientService {
     this.ingredientRepository = ingredientRepository;
   }
 
-  public async findById(id: number): Promise<Ingredient> {
+  public async findById(id: number, includeDeleted: boolean = false): Promise<Ingredient> {
+    const where = {
+      id,
+      deletedAt: null,
+    };
+    if (includeDeleted) {
+      delete where.deletedAt;
+    }
     const ingredient = await this.ingredientRepository.findOneOrFail({
-      where: {
-        id,
-      },
+      where,
     });
 
     return ingredient;
