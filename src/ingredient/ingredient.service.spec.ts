@@ -64,5 +64,18 @@ describe('IngredientService', (): void => {
       expect(IngredientRepository.findOneOrFail)
         .toHaveBeenCalledWith({ where });
     });
+    it('can be overridden to return deleted items', async (): Promise<void> => {
+      const where = {
+        id: 1,
+      };
+      IngredientRepository.findOneOrFail
+        .mockRejectedValue(new EntityNotFoundError(Ingredient, { where }));
+
+      await expect(service.findById(1, true)).rejects
+        .toThrowError(EntityNotFoundError);
+
+      expect(IngredientRepository.findOneOrFail)
+        .toHaveBeenCalledWith({ where });
+    });
   });
 });
