@@ -15,6 +15,6 @@ export abstract class BaseEntity {
   @UpdateDateColumn()
   public updatedAt?: Date;
 
-  @Column('date')
+  @Column('timestamp')
   public deletedAt?: Date = null;
 }
