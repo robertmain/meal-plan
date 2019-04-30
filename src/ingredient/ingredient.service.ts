@@ -27,4 +27,11 @@ export class IngredientService {
 
     return ingredient;
   }
+
+  public async findAll(): Promise<Ingredient[]> {
+    const ingredients = await this.ingredientRepository.find({
+      deletedAt: null,
+    });
+    return ingredients;
+  }
 }

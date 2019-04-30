@@ -8,6 +8,7 @@ describe('IngredientService', (): void => {
 
   const IngredientRepository = {
     findOneOrFail: jest.fn(),
+    find: jest.fn(),
   };
 
   beforeEach(async (): Promise<void> => {
@@ -26,6 +27,7 @@ describe('IngredientService', (): void => {
 
   afterEach((): void => {
     IngredientRepository.findOneOrFail.mockReset();
+    IngredientRepository.find.mockReset();
   });
 
   describe('findById', (): void => {
@@ -76,6 +78,36 @@ describe('IngredientService', (): void => {
 
       expect(IngredientRepository.findOneOrFail)
         .toHaveBeenCalledWith({ where });
+    });
+  });
+  describe('findAll', (): void => {
+    it('returns all ingredients from the database', async (): Promise<void> => {
+      IngredientRepository.find.mockResolvedValue(
+        Array(10).fill(new Ingredient())
+      );
+
+      const ingredients = await service.findAll();
+
+      expect(ingredients).toHaveLength(10);
+      expect(ingredients).toBeTruthy();
+    });
+    it('omits deleted ingredients from query results', async (): Promise<void> => {
+      IngredientRepository.find.mockResolvedValue([]);
+
+      await service.findAll();
+
+      expect(IngredientRepository.find).toHaveBeenCalledWith({
+        deletedAt: null,
+      });
+    });
+    it('can be overridden to return deleted items', async (): Promise<void> => {
+      IngredientRepository.find.mockResolvedValue([]);
+
+      await service.findAll();
+
+      expect(IngredientRepository.find).toHaveBeenCalledWith({
+        deletedAt: null,
+      });
     });
   });
 });

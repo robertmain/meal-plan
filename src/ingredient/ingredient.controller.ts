@@ -19,6 +19,14 @@ export class IngredientController {
     this.ingredientService = ingredientService;
   }
 
+  @Get()
+  @ApiOperation({ title: 'Retrieve all ingredients in the database' })
+  @ApiOkResponse({ type: IngredientResponse, description: 'All ingredients in the database(omitting deleted records)', isArray: true })
+  public async root(): Promise<Ingredient[]> {
+    const ingredients = await this.ingredientService.findAll();
+    return ingredients;
+  }
+
   @Get(':id')
   @ApiOperation({ title: 'Retrieve a single ingredient by ID' })
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully located' })

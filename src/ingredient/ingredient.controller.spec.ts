@@ -9,6 +9,7 @@ describe('Ingredient Controller', (): void => {
   let controller: IngredientController;
   const service = {
     findById: jest.fn(),
+    findAll: jest.fn(),
   };
 
   beforeEach(async (): Promise<void> => {
@@ -23,6 +24,29 @@ describe('Ingredient Controller', (): void => {
     }).compile();
 
     controller = module.get<IngredientController>(IngredientController);
+  });
+
+  describe('root', (): void => {
+    it('retrieves all ingredients in the database', async (): Promise<void> => {
+      const mockIngredient: Ingredient = {
+        id: 523,
+        name: 'Brown sugar',
+        createdAt: new Date(),
+      };
+
+      const mockIngredients = Array(10).fill(mockIngredient);
+
+      service.findAll.mockResolvedValue(mockIngredients);
+
+      const ingredients = await controller.root();
+
+      expect(service.findAll).toHaveBeenCalledTimes(1);
+      expect(ingredients).toHaveLength(mockIngredients.length);
+      expect(ingredients).toContain(mockIngredient);
+    });
+    it('returns an empty array if there are no ingredients', async (): Promise<void> => {
+      service.findAll.mockResolvedValue([]);
+    });
   });
 
   describe('getOne', (): void => {
