@@ -2,13 +2,12 @@ import {
   MigrationInterface,
   QueryRunner,
   Table,
-  TableIndex,
 } from 'typeorm';
 
 export class createIngredientTable1555981124297 implements MigrationInterface {
   private tableName: string = 'ingredient';
 
-  public async up(queryRunner: QueryRunner): Promise<any> {
+  public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(new Table({
       name: this.tableName,
       columns: [
@@ -38,12 +37,12 @@ export class createIngredientTable1555981124297 implements MigrationInterface {
           name: 'deletedAt',
           type: 'timestamp',
           isNullable: true,
-        }
+        },
       ],
     }));
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {
+  public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable(this.tableName);
   }
 }
