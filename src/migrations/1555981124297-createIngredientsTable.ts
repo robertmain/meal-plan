@@ -4,7 +4,7 @@ import {
   Table,
 } from 'typeorm';
 
-export class createIngredientTable1555981124297 implements MigrationInterface {
+export class createIngredientsTable1555981124297 implements MigrationInterface {
   private tableName: string = 'ingredient';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -15,6 +15,8 @@ export class createIngredientTable1555981124297 implements MigrationInterface {
           name: 'id',
           type: 'int',
           isPrimary: true,
+          isGenerated: true,
+          generationStrategy: 'increment',
         },
         {
           name: 'name',
