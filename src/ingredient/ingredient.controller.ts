@@ -1,4 +1,11 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  NotFoundException,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   ApiUseTags,
   ApiOkResponse,
@@ -12,6 +19,7 @@ import { IngredientResponse } from './dto/ingredientResponse.dto';
 
 @ApiUseTags('ingredient')
 @Controller('ingredient')
+@UseInterceptors(ClassSerializerInterceptor)
 export class IngredientController {
   private readonly ingredientService: IngredientService;
 

@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
@@ -15,6 +16,7 @@ export abstract class BaseEntity {
   @UpdateDateColumn()
   public updatedAt?: Date;
 
+  @Exclude()
   @Column('timestamp')
   public deletedAt?: Date = null;
 }
