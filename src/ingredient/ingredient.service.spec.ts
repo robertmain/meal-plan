@@ -97,17 +97,17 @@ describe('IngredientService', (): void => {
       await service.findAll();
 
       expect(IngredientRepository.find).toHaveBeenCalledWith({
-        deletedAt: null,
+        where: {
+          deletedAt: null,
+        },
       });
     });
     it('can be overridden to return deleted items', async (): Promise<void> => {
       IngredientRepository.find.mockResolvedValue([]);
 
-      await service.findAll();
+      await service.findAll(true);
 
-      expect(IngredientRepository.find).toHaveBeenCalledWith({
-        deletedAt: null,
-      });
+      expect(IngredientRepository.find).toHaveBeenCalledWith({});
     });
   });
 });

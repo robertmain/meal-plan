@@ -1,37 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { BaseService } from '../base';
 import { Ingredient } from './ingredient.entity';
 
 @Injectable()
-export class IngredientService {
-  private readonly ingredientRepository: Repository<Ingredient>;
-
-  public constructor(
-    @InjectRepository(Ingredient) ingredientRepository: Repository<Ingredient>
-  ) {
-    this.ingredientRepository = ingredientRepository;
-  }
-
-  public async findById(id: number, includeDeleted: boolean = false): Promise<Ingredient> {
-    const where = {
-      id,
-      deletedAt: null,
-    };
-    if (includeDeleted) {
-      delete where.deletedAt;
-    }
-    const ingredient = await this.ingredientRepository.findOneOrFail({
-      where,
-    });
-
-    return ingredient;
-  }
-
-  public async findAll(): Promise<Ingredient[]> {
-    const ingredients = await this.ingredientRepository.find({
-      deletedAt: null,
-    });
-    return ingredients;
-  }
+export class IngredientService extends BaseService<Ingredient> {
+  @InjectRepository(Ingredient)
+  protected readonly repository: Repository<Ingredient>;
 }
