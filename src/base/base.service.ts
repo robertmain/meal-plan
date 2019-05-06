@@ -24,11 +24,13 @@ export abstract class BaseService<Entity extends BaseEntity> {
   }
 
   public async findAll(includeDeleted: boolean = false): Promise<Entity[]> {
-    const options = { where: { deletedAt: null } };
+    const where = { deletedAt: null };
     if (includeDeleted) {
-      delete options.where;
+      delete where.deletedAt;
     }
-    const ingredients = await this.repository.find(options);
+    const ingredients = await this.repository.find({
+      where,
+    });
     return ingredients;
   }
 }

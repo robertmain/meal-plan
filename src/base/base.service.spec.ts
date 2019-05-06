@@ -107,8 +107,10 @@ describe('Base Service', (): void => {
       await service.findAll();
     });
     it('can be overridden to return deleted entities', async (): Promise<void> => {
+      const where = {};
+
       repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ })
+        It.isValue({ where })
       )).returns((): Promise<BaseEntity[]> => Promise.resolve([])).verifiable();
 
       await service.findAll(true);
