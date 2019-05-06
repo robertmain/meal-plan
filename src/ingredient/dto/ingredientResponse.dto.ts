@@ -1,4 +1,4 @@
-import { ApiModelProperty, ApiModelPropertyOptional } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger';
 
 export abstract class IngredientResponse {
   @ApiModelProperty({
@@ -25,11 +25,4 @@ export abstract class IngredientResponse {
     example: new Date().toISOString(),
   })
   public updatedAt?: Date;
-
-  @ApiModelPropertyOptional({
-    default: null,
-    type: 'string',
-    example: new Date().toISOString(),
-  })
-  public deletedAt?: Date = null;
 }
