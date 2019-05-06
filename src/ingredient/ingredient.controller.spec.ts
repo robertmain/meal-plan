@@ -7,6 +7,13 @@ import { Ingredient } from './ingredient.entity';
 
 describe('Ingredient Controller', (): void => {
   let controller: IngredientController;
+
+  const mockIngredient: Ingredient = {
+    id: 523,
+    name: 'Brown sugar',
+    createdAt: new Date(),
+  };
+
   const service = {
     findById: jest.fn(),
     findAll: jest.fn(),
@@ -28,12 +35,6 @@ describe('Ingredient Controller', (): void => {
 
   describe('root', (): void => {
     it('retrieves all ingredients in the database', async (): Promise<void> => {
-      const mockIngredient: Ingredient = {
-        id: 523,
-        name: 'Brown sugar',
-        createdAt: new Date(),
-      };
-
       const mockIngredients = Array(10).fill(mockIngredient);
 
       service.findAll.mockResolvedValue(mockIngredients);
@@ -51,12 +52,6 @@ describe('Ingredient Controller', (): void => {
 
   describe('getOne', (): void => {
     it('can retrieve a single ingredient by ID', async (): Promise<void> => {
-      const mockIngredient: Ingredient = {
-        id: 523,
-        name: 'molasses',
-        createdAt: new Date(),
-      };
-
       service.findById.mockResolvedValue(mockIngredient);
 
       const ingredient = await controller.getOne(26);
