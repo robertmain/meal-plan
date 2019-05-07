@@ -33,4 +33,8 @@ export abstract class BaseService<Entity extends BaseEntity> {
     });
     return ingredients;
   }
+
+  public async create(entity: object): Promise<void> {
+    console.log(entity);
+  }
 }
