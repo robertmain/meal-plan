@@ -1,5 +1,10 @@
 sudo: false
 language: node_js
+script:
+  - npm install -g codecov
+  - npm run test
+after_success:
+  - codecov
 node_js:
   - "9"
   - "10"
