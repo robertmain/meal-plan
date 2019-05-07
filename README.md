@@ -1,6 +1,6 @@
 # Meal Planner API
 
-[![Build Status](https://travis-ci.org/robertmain/meal-plan.svg?branch=master)](https://travis-ci.org/robertmain/meal-plan)
+[![Build Status](https://travis-ci.org/robertmain/meal-plan.svg?branch=master)](https://travis-ci.org/robertmain/meal-plan) [![codecov](https://codecov.io/gh/robertmain/meal-plan/branch/master/graph/badge.svg)](https://codecov.io/gh/robertmain/meal-plan)
 
 Meal planning API based on [NestJS](http://github.com/nestjs/nest). Currently WIP.
 
