@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CreateRecipe } from './dto/createRecipe.dto';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
-import { BaseEntity } from '../base/base.entity';
 
 describe('Recipe Controller', (): void => {
   let controller: RecipeController;
@@ -35,6 +34,28 @@ describe('Recipe Controller', (): void => {
       await controller.create(newRecipe);
 
       expect(service.create).toHaveBeenCalledWith(newRecipe);
+    });
+
+    it('returns the newly created recipe', async (): Promise<void> => {
+      service.create.mockResolvedValue({
+        ...newRecipe,
+        id: 6,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const {
+        id,
+        createdAt,
+        updatedAt,
+        ...recipe
+      } = await controller.create(newRecipe);
+
+      expect(id).toBeDefined();
+      expect(createdAt).toBeDefined();
+      expect(updatedAt).toBeDefined();
+
+      expect(recipe).toEqual(newRecipe);
     });
   });
 });

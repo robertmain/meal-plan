@@ -8,6 +8,7 @@ import {
 import { ApiUseTags } from '@nestjs/swagger';
 import { RecipeService } from './recipe.service';
 import { CreateRecipe } from './dto/createRecipe.dto';
+import { Recipe } from './recipe.entity';
 
 @ApiUseTags('recipe')
 @Controller('recipe')
@@ -20,9 +21,9 @@ export class RecipeController {
   }
 
   @Post()
-  public async create(@Body() recipe: CreateRecipe): Promise<CreateRecipe> {
-    await this.recipeService.create(recipe);
+  public async create(@Body() recipe: CreateRecipe): Promise<Recipe> {
+    const newRecipe = await this.recipeService.create(recipe);
 
-    return recipe;
+    return newRecipe;
   }
 }
