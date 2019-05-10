@@ -49,9 +49,9 @@ describe('Base Service', (): void => {
         id: mockEntity.id,
       };
 
-      repository.setup((r): Promise<BaseEntity> => r.findOneOrFail(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity> => Promise.resolve(mockEntity))
+      repository.setup((mockRepo): Promise<BaseEntity> => mockRepo
+        .findOneOrFail(It.isValue({ where })))
+        .returns((): Promise<BaseEntity> => Promise.resolve(mockEntity))
         .verifiable();
 
       const ingredient = await service.findById(mockEntity.id);
@@ -64,11 +64,12 @@ describe('Base Service', (): void => {
         id: mockEntity.id,
       };
 
-      repository.setup((r): Promise<BaseEntity> => r.findOneOrFail(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity> => Promise.reject(
-        new EntityNotFoundError(BaseEntity, where)
-      )).verifiable();
+      repository.setup((mockRepo): Promise<BaseEntity> => mockRepo
+        .findOneOrFail(It.isValue({ where })))
+        .returns((): Promise<BaseEntity> => Promise.reject(
+          new EntityNotFoundError(BaseEntity, where)
+        ))
+        .verifiable();
 
       await expect(service.findById(mockEntity.id)).rejects
         .toThrowError(EntityNotFoundError);
@@ -76,11 +77,10 @@ describe('Base Service', (): void => {
     it('can be overridden to return deleted entities', async (): Promise<void> => {
       const where = { id: mockEntity.id };
 
-      repository.setup((r): Promise<BaseEntity> => r.findOneOrFail(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity> => Promise.resolve(
-        mockEntity
-      )).verifiable();
+      repository.setup((mockRepo): Promise<BaseEntity> => mockRepo
+        .findOneOrFail(It.isValue({ where })))
+        .returns((): Promise<BaseEntity> => Promise.resolve(mockEntity))
+        .verifiable();
 
       await expect(service.findById(mockEntity.id, true)).resolves.toBeTruthy();
     });
@@ -89,29 +89,32 @@ describe('Base Service', (): void => {
     it('returns all entities from the datbase', async (): Promise<void> => {
       const where = { ...excludeDeleted };
 
-      repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity[]> => Promise.resolve(
-        new Array(10).fill(mockEntity)
-      )).verifiable();
+      repository.setup((mockRepo): Promise<BaseEntity[]> => mockRepo
+        .find(It.isValue({ where })))
+        .returns((): Promise<BaseEntity[]> => Promise.resolve(
+          new Array(10).fill(mockEntity)
+        ))
+        .verifiable();
 
       await service.findAll();
     });
     it('omits deleted entities from query results', async (): Promise<void> => {
       const where = { ...excludeDeleted };
 
-      repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity[]> => Promise.resolve([])).verifiable();
+      repository.setup((mockRepo): Promise<BaseEntity[]> => mockRepo
+        .find(It.isValue({ where })))
+        .returns((): Promise<BaseEntity[]> => Promise.resolve([]))
+        .verifiable();
 
       await service.findAll();
     });
     it('can be overridden to return deleted entities', async (): Promise<void> => {
       const where = {};
 
-      repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity[]> => Promise.resolve([])).verifiable();
+      repository.setup((mockRepo): Promise<BaseEntity[]> => mockRepo
+        .find(It.isValue({ where })))
+        .returns((): Promise<BaseEntity[]> => Promise.resolve([]))
+        .verifiable();
 
       await service.findAll(true);
     });
