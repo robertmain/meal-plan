@@ -132,5 +132,15 @@ describe('Base Service', (): void => {
 
       await service.create({ name: mockEntity.name });
     });
+    it('returns the newly created entity', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .save(It.isValue({ name: mockEntity.name })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+        .verifiable();
+
+      const entity = await service.create({ name: mockEntity.name });
+      expect(entity).toBeTruthy();
+      expect(entity.name).toBe(mockEntity.name);
+    });
   });
 });
