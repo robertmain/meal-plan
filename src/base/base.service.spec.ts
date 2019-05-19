@@ -123,4 +123,14 @@ describe('Base Service', (): void => {
       await service.findAll(true);
     });
   });
+  describe('create', (): void => {
+    it('creates a new entity in the database', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .save(It.isValue({ name: mockEntity.name })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+        .verifiable();
+
+      await service.create({ name: mockEntity.name });
+    });
+  });
 });

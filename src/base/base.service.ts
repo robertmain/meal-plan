@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
 export abstract class BaseService<Entity extends BaseEntity> {
@@ -34,6 +34,8 @@ export abstract class BaseService<Entity extends BaseEntity> {
     return ingredients;
   }
 
-  public async create(entity: object): Promise<void> {
+  public async create(entity: DeepPartial<Entity>): Promise<Entity> {
+    const savedEntity = await this.repository.save(entity);
+    return savedEntity;
   }
 }
