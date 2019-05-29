@@ -5,17 +5,23 @@ import {
   NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,
+  Post,
+  Body,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiUseTags,
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiOperation,
+  ApiCreatedResponse,
+  ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
+import { CreateIngredient } from './dto/createIngredient.dto';
 
 @ApiUseTags('ingredient')
 @Controller('ingredient')
@@ -50,5 +56,19 @@ export class IngredientController {
         throw error;
       }
     }
+  }
+
+  @Post()
+  @ApiOperation({
+    title: 'Create a new ingredient',
+  })
+  @ApiCreatedResponse({
+    type: IngredientResponse,
+    description: 'Ingredient was successfully created',
+  })
+  public async create(
+    @Body() ingredient: CreateIngredient
+  ): Promise<Ingredient> {
+    return this.ingredientService.create(ingredient);
   }
 }
