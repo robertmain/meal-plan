@@ -46,6 +46,8 @@ export class IngredientController {
     } catch (error) {
       if (error instanceof EntityNotFoundError) {
         throw new NotFoundException();
+      } else {
+        throw error;
       }
     }
   }

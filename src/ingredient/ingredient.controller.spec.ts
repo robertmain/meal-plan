@@ -68,5 +68,11 @@ describe('Ingredient Controller', (): void => {
       await expect(controller.getOne(26)).rejects
         .toBeInstanceOf(NotFoundException);
     });
+    it('allows un-caught exceptions to bubble', async (): Promise<void> => {
+      service.findById.mockRejectedValue(new Error('Error'));
+
+      await expect(controller.getOne(26)).rejects
+        .toBeInstanceOf(Error);
+    });
   });
 });
