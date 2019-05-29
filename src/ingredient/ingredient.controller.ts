@@ -5,6 +5,8 @@ import {
   NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,
+  ValidationPipe,
+  UsePipes,
   Post,
   Body,
   BadRequestException,
@@ -22,6 +24,7 @@ import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
 import { CreateIngredient } from './dto/createIngredient.dto';
+import { ValidationError } from 'class-validator';
 
 @ApiUseTags('ingredient')
 @Controller('ingredient')
@@ -66,6 +69,17 @@ export class IngredientController {
     type: IngredientResponse,
     description: 'Ingredient was successfully created',
   })
+  @ApiBadRequestResponse({
+    description: 'Array of validation errors',
+  })
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    exceptionFactory: (errors): BadRequestException => new BadRequestException(
+      errors.map(({ constraints }): string[] => Object.entries(constraints)
+        .map(([, value]): string => value)).join()
+    ),
+  }))
   public async create(
     @Body() ingredient: CreateIngredient
   ): Promise<Ingredient> {
