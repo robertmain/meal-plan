@@ -9,21 +9,23 @@ import {
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { BaseEntity, BaseService } from '.';
 
-const mockEntity: BaseEntity = {
+type Entity = BaseEntity & { name: string };
+const mockEntity: Entity = {
   id: 6,
   updatedAt: new Date(),
   createdAt: new Date(),
   deletedAt: null,
+  name: 'Fubar',
 };
 
 const excludeDeleted = { deletedAt: null };
 
 describe('Base Service', (): void => {
-  let service: BaseService<BaseEntity>;
-  let repository: IMock<Repository<BaseEntity>>;
+  let service: BaseService<Entity>;
+  let repository: IMock<Repository<Entity>>;
 
   beforeEach(async (): Promise<void> => {
-    repository = Mock.ofType<Repository<BaseEntity>>(
+    repository = Mock.ofType<Repository<Entity>>(
       Repository,
       MockBehavior.Strict
     );
@@ -33,14 +35,14 @@ describe('Base Service', (): void => {
         {
           provide: BaseService,
           useFactory: (): object => {
-            class Service extends BaseService<BaseEntity> { }
+            class Service extends BaseService<Entity> { }
             return new Service(repository.object);
           },
         },
       ],
     }).compile();
 
-    service = module.get<BaseService<BaseEntity>>(BaseService);
+    service = module.get<BaseService<Entity>>(BaseService);
   });
   describe('findById', (): void => {
     it('retrives a single entity by ID', async (): Promise<void> => {
@@ -49,9 +51,9 @@ describe('Base Service', (): void => {
         id: mockEntity.id,
       };
 
-      repository.setup((r): Promise<BaseEntity> => r.findOneOrFail(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity> => Promise.resolve(mockEntity))
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .findOneOrFail(It.isValue({ where })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
         .verifiable();
 
       const ingredient = await service.findById(mockEntity.id);
@@ -64,11 +66,12 @@ describe('Base Service', (): void => {
         id: mockEntity.id,
       };
 
-      repository.setup((r): Promise<BaseEntity> => r.findOneOrFail(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity> => Promise.reject(
-        new EntityNotFoundError(BaseEntity, where)
-      )).verifiable();
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .findOneOrFail(It.isValue({ where })))
+        .returns((): Promise<Entity> => Promise.reject(
+          new EntityNotFoundError(BaseEntity, where)
+        ))
+        .verifiable();
 
       await expect(service.findById(mockEntity.id)).rejects
         .toThrowError(EntityNotFoundError);
@@ -76,42 +79,68 @@ describe('Base Service', (): void => {
     it('can be overridden to return deleted entities', async (): Promise<void> => {
       const where = { id: mockEntity.id };
 
-      repository.setup((r): Promise<BaseEntity> => r.findOneOrFail(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity> => Promise.resolve(
-        mockEntity
-      )).verifiable();
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .findOneOrFail(It.isValue({ where })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+        .verifiable();
 
       await expect(service.findById(mockEntity.id, true)).resolves.toBeTruthy();
     });
   });
   describe('findAll', (): void => {
-    it('returns all entities from the datbase', async (): Promise<void> => {
+    it('returns all  non-deleted entities', async (): Promise<void> => {
       const where = { ...excludeDeleted };
 
-      repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity[]> => Promise.resolve(
-        new Array(10).fill(mockEntity)
-      )).verifiable();
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .find(It.isValue({ where })))
+        .returns((): Promise<Entity[]> => Promise.resolve(
+          new Array(10).fill(mockEntity)
+        ))
+        .verifiable();
 
-      await service.findAll();
+      const entities = await service.findAll();
+
+      expect(entities).toHaveLength(10);
     });
     it('omits deleted entities from query results', async (): Promise<void> => {
       const where = { ...excludeDeleted };
 
-      repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ where })
-      )).returns((): Promise<BaseEntity[]> => Promise.resolve([])).verifiable();
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .find(It.isValue({ where })))
+        .returns((): Promise<Entity[]> => Promise.resolve([]))
+        .verifiable();
 
       await service.findAll();
     });
     it('can be overridden to return deleted entities', async (): Promise<void> => {
-      repository.setup((r): Promise<BaseEntity[]> => r.find(
-        It.isValue({ })
-      )).returns((): Promise<BaseEntity[]> => Promise.resolve([])).verifiable();
+      const where = {};
+
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .find(It.isValue({ where })))
+        .returns((): Promise<Entity[]> => Promise.resolve([]))
+        .verifiable();
 
       await service.findAll(true);
+    });
+  });
+  describe('create', (): void => {
+    it('creates a new entity in the database', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .save(It.isValue({ name: mockEntity.name })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+        .verifiable();
+
+      await service.create({ name: mockEntity.name });
+    });
+    it('returns the newly created entity', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .save(It.isValue({ name: mockEntity.name })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+        .verifiable();
+
+      const entity = await service.create({ name: mockEntity.name });
+      expect(entity).toBeTruthy();
+      expect(entity.name).toBe(mockEntity.name);
     });
   });
 });
