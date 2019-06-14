@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
 import {
   Mock,
   IMock,
@@ -86,9 +86,23 @@ describe('Base Service', (): void => {
 
       await expect(service.findById(mockEntity.id, true)).resolves.toBeTruthy();
     });
+    it('allows custom find options to be passed to the repository', async (): Promise<void> => {
+      const where = { deletedAt: null };
+
+      const options: FindOneOptions<Entity> = {
+        relations: [],
+      };
+
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .find(It.isValue({ where, relations: options.relations })))
+        .returns((): Promise<Entity[]> => Promise.resolve([]))
+        .verifiable();
+
+      await service.findAll(undefined, options);
+    });
   });
   describe('findAll', (): void => {
-    it('returns all  non-deleted entities', async (): Promise<void> => {
+    it('returns all non-deleted entities', async (): Promise<void> => {
       const where = { ...excludeDeleted };
 
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
@@ -121,6 +135,20 @@ describe('Base Service', (): void => {
         .verifiable();
 
       await service.findAll(true);
+    });
+    it('allows custom find options to be passed to the repository', async (): Promise<void> => {
+      const where = { deletedAt: null };
+
+      const options: FindManyOptions<Entity> = {
+        relations: [],
+      };
+
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .find(It.isValue({ where, relations: options.relations })))
+        .returns((): Promise<Entity[]> => Promise.resolve([]))
+        .verifiable();
+
+      await service.findAll(undefined, options);
     });
   });
   describe('create', (): void => {
