@@ -1,8 +1,10 @@
 import { ApiModelProperty } from '@nestjs/swagger';
+import { Ingredient } from '../../ingredient/ingredient.entity';
 
 export abstract class RecipeResponse {
   @ApiModelProperty({
     description: 'Recipe primary key ID',
+    example: 85,
   })
   public id: number;
 
@@ -31,4 +33,25 @@ export abstract class RecipeResponse {
     example: new Date().toISOString(),
   })
   public updatedAt?: Date;
+
+  @ApiModelProperty({
+    description: 'All the ingredients required by this recipe',
+    type: Ingredient,
+    isArray: true,
+    example: [
+      {
+        id: 2,
+        name: 'Cumin',
+        createdAt: new Date().toISOString(),
+        updateDat: new Date().toISOString(),
+      },
+      {
+        id: 8,
+        name: 'Ground Beef',
+        createdAt: new Date().toISOString(),
+        updateDat: new Date().toISOString(),
+      },
+    ],
+  })
+  public ingredients: Ingredient[];
 }
