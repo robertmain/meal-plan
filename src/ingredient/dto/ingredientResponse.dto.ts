@@ -2,7 +2,7 @@ import { ApiModelProperty } from '@nestjs/swagger';
 
 export abstract class IngredientResponse {
   @ApiModelProperty({
-    description: 'Auto-incrementing entity ID',
+    description: 'Ingredient primary key ID',
   })
   public id: number;
 
@@ -13,14 +13,14 @@ export abstract class IngredientResponse {
   public name: string;
 
   @ApiModelProperty({
-    description: 'Entity creation date',
+    description: 'Ingredient creation date (in ISO-8601 format)',
     type: 'string',
     example: new Date().toISOString(),
   })
   public createdAt: Date;
 
   @ApiModelProperty({
-    description: 'Entity last update date',
+    description: 'Ingredient last update date (in ISO-8601 format)',
     type: 'string',
     example: new Date().toISOString(),
   })

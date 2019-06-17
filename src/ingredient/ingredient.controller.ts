@@ -53,16 +53,9 @@ export class IngredientController {
   }
 
   @Post()
-  @ApiOperation({
-    title: 'Create a new ingredient',
-  })
-  @ApiCreatedResponse({
-    type: IngredientResponse,
-    description: 'Ingredient was successfully created',
-  })
-  @ApiBadRequestResponse({
-    description: 'Array of validation errors',
-  })
+  @ApiOperation({ title: 'Create a new ingredient' })
+  @ApiCreatedResponse({ type: IngredientResponse, description: 'Ingredient was successfully created' })
+  @ApiBadRequestResponse({ description: 'Array of validation errors' })
   public async create(
     @Body() ingredient: CreateIngredient
   ): Promise<Ingredient> {
