@@ -6,7 +6,6 @@ import {
 } from 'typeorm';
 
 export class CreateRecipeTable1557104545105 implements MigrationInterface {
-
   private ingredientsFK = new TableForeignKey({
     name: 'FK_recipe_ingredients_ingredient_recipe',
     columnNames: ['recipeId'],

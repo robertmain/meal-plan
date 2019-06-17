@@ -19,4 +19,11 @@ export class Recipe extends BaseEntity {
     nullable: false,
   })
   public description?: string;
+
+  @ManyToMany(
+    (): ObjectType<Ingredient> => Ingredient,
+    (ingredient): Recipe[] => ingredient.recipe
+  )
+  @JoinTable()
+  public ingredients: Ingredient[];
 }
