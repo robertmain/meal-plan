@@ -5,7 +5,6 @@ import {
 } from 'typeorm';
 
 export class CreateIngredientsTable1555981124297 implements MigrationInterface {
-
   private ingredientTable: Table = new Table({
     name: 'ingredient',
     columns: [

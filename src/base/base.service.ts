@@ -1,4 +1,4 @@
-import { Repository, DeepPartial, FindManyOptions, FindOneOptions } from 'typeorm';
+import { Repository, DeepPartial, FindManyOptions } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
 export abstract class BaseService<Entity extends BaseEntity> {
@@ -9,23 +9,24 @@ export abstract class BaseService<Entity extends BaseEntity> {
   }
 
   public async findById(
-    id: number,
+    ids: number[],
     includeDeleted: boolean = false,
-    options: FindOneOptions<Entity> = {}
-  ): Promise<Entity> {
+    options: FindManyOptions<Entity> = {}
+  ): Promise<Entity[]> {
     const where = {
-      id,
       deletedAt: null,
     };
+
     if (includeDeleted) {
       delete where.deletedAt;
     }
-    const record = await this.repository.findOneOrFail({
+
+    const records = await this.repository.findByIds(ids, {
       ...options,
       where,
     });
 
-    return record;
+    return records;
   }
 
   public async findAll(

@@ -61,18 +61,16 @@ describe('Ingredient Controller', (): void => {
 
   describe('getOne', (): void => {
     it('can retrieve a single ingredient by ID', async (): Promise<void> => {
-      service.findById.mockResolvedValue(ingredientResponse);
+      service.findById.mockResolvedValue([ingredientResponse]);
 
       const ingredient = await controller.getOne(26);
 
       expect(service.findById).toHaveBeenCalledTimes(1);
-      expect(service.findById).toHaveBeenCalledWith(26);
+      expect(service.findById).toHaveBeenCalledWith([26]);
       expect(ingredient).toBe(ingredientResponse);
     });
     it('handles missing ingredients by throwing a NotFoundException', async (): Promise<void> => {
-      service.findById.mockRejectedValue(
-        new EntityNotFoundError(Ingredient, 'id = 1')
-      );
+      service.findById.mockResolvedValue([]);
 
       await expect(controller.getOne(26)).rejects
         .toBeInstanceOf(NotFoundException);

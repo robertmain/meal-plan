@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import {
   Mock,
   IMock,
@@ -45,60 +45,51 @@ describe('Base Service', (): void => {
     service = module.get<BaseService<Entity>>(BaseService);
   });
   describe('findById', (): void => {
-    it('retrives a single entity by ID', async (): Promise<void> => {
-      const where = {
-        ...excludeDeleted,
-        id: mockEntity.id,
-      };
-
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
-        .findOneOrFail(It.isValue({ where })))
-        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+    it('retrives one or more entities by ID', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .findByIds(It.isValue([mockEntity.id]), It.isAny()))
+        .returns((): Promise<Entity[]> => Promise.resolve([mockEntity]))
         .verifiable();
 
-      const ingredient = await service.findById(mockEntity.id);
+      const ingredient = await service.findById([mockEntity.id]);
 
       expect(ingredient).toBeTruthy();
     });
     it('omits deleted entities from query results', async (): Promise<void> => {
       const where = {
         ...excludeDeleted,
-        id: mockEntity.id,
       };
 
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
-        .findOneOrFail(It.isValue({ where })))
-        .returns((): Promise<Entity> => Promise.reject(
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .findByIds(It.isAny(), It.isObjectWith({ where })))
+        .returns((): Promise<Entity[]> => Promise.reject(
           new EntityNotFoundError(BaseEntity, where)
         ))
         .verifiable();
 
-      await expect(service.findById(mockEntity.id)).rejects
+      await expect(service.findById([mockEntity.id])).rejects
         .toThrowError(EntityNotFoundError);
     });
     it('can be overridden to return deleted entities', async (): Promise<void> => {
-      const where = { id: mockEntity.id };
-
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
-        .findOneOrFail(It.isValue({ where })))
-        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+      repository.setup((mockRepo): Promise<Entity[]> => mockRepo
+        .findByIds(It.isAny(), It.isObjectWith({ where: {} })))
+        .returns((): Promise<Entity[]> => Promise.resolve([mockEntity]))
         .verifiable();
 
-      await expect(service.findById(mockEntity.id, true)).resolves.toBeTruthy();
+      await expect(service.findById([mockEntity.id], true))
+        .resolves.toBeTruthy();
     });
     it('allows custom find options to be passed to the repository', async (): Promise<void> => {
-      const where = { deletedAt: null };
-
-      const options: FindOneOptions<Entity> = {
+      const options: FindManyOptions<Entity> = {
         relations: [],
       };
 
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
-        .find(It.isValue({ where, relations: options.relations })))
+        .findByIds(It.isAny(), It.isObjectWith({ ...options })))
         .returns((): Promise<Entity[]> => Promise.resolve([]))
         .verifiable();
 
-      await service.findAll(undefined, options);
+      await service.findById([mockEntity.id], undefined, options);
     });
   });
   describe('findAll', (): void => {

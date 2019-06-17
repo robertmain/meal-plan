@@ -45,16 +45,12 @@ export class IngredientController {
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully located' })
   @ApiNotFoundResponse({ description: 'An ingredient of the requested ID could not be found' })
   public async getOne(@Param('id') id: number): Promise<Ingredient> {
-    try {
-      const ingredient = await this.ingredientService.findById(id);
-      return ingredient;
-    } catch (error) {
-      if (error instanceof EntityNotFoundError) {
-        throw new NotFoundException();
-      } else {
-        throw error;
-      }
+    const [ingredient] = await this.ingredientService.findById([id]);
+
+    if (!ingredient) {
+      throw new NotFoundException();
     }
+    return ingredient;
   }
 
   @Post()
