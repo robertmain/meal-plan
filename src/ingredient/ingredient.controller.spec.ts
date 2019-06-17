@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { NotFoundException } from '@nestjs/common';
 import { IngredientController } from './ingredient.controller';
 import { IngredientService } from './ingredient.service';
-import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
 import { CreateIngredient } from './dto/createIngredient.dto';
 

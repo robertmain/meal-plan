@@ -4,7 +4,6 @@ import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { Ingredient } from '../ingredient/ingredient.entity';
-import { Recipe } from './recipe.entity';
 
 describe('Recipe Controller', (): void => {
   let controller: RecipeController;

@@ -16,7 +16,6 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
