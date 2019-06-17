@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { ValidationPipe, BadRequestException } from '@nestjs/common';
 
 const {
   name,
@@ -20,6 +21,14 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    exceptionFactory: (errors): BadRequestException => new BadRequestException(
+      errors.map(({ constraints }): string[] => Object.entries(constraints)
+        .map(([, value]): string => value)).join()
+    ),
+  }));
   await app.listen(3000);
 }
 bootstrap();
