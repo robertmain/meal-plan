@@ -4,6 +4,7 @@ import { IngredientController } from './ingredient.controller';
 import { IngredientService } from './ingredient.service';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
 import { CreateIngredient } from './dto/createIngredient.dto';
+import { UpdateIngredient } from './dto/updateIngredient.dto';
 
 describe('Ingredient Controller', (): void => {
   let controller: IngredientController;
@@ -18,6 +19,7 @@ describe('Ingredient Controller', (): void => {
     findById: jest.fn(),
     findAll: jest.fn(),
     create: jest.fn(),
+    update: jest.fn(),
   };
 
   beforeEach(async (): Promise<void> => {
@@ -92,12 +94,37 @@ describe('Ingredient Controller', (): void => {
         ...newIngredient,
       });
     });
-    it('returns the newly created recipe', async (): Promise<void> => {
+    it('returns the newly created ingredient', async (): Promise<void> => {
       service.create.mockResolvedValue(ingredientResponse);
 
       const ingredient = await controller.create(newIngredient);
 
       expect(ingredient).toBe(ingredientResponse);
+    });
+  });
+  describe('update', (): void => {
+    const ingredient: UpdateIngredient = {
+      name: ingredientResponse.name,
+    };
+
+    it('updates an existing ingredient', async (): Promise<void> => {
+      await controller.update(ingredientResponse.id, ingredient);
+
+      expect(service.update).toHaveBeenCalledTimes(1);
+      expect(service.update).toHaveBeenCalledWith(
+        ingredientResponse.id,
+        ingredient
+      );
+    });
+
+    it('returns the updated ingredient', async (): Promise<void> => {
+      service.update.mockResolvedValue(ingredientResponse);
+
+      const returned = await controller.update(ingredientResponse.id, {
+        name: ingredient.name,
+      });
+
+      expect(returned).toBe(ingredientResponse);
     });
   });
 });
