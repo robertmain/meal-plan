@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientController } from './ingredient.controller';
 import { IngredientService } from './ingredient.service';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
 import { CreateIngredient } from './dto/createIngredient.dto';
 import { UpdateIngredient } from './dto/updateIngredient.dto';
+import { Ingredient } from './ingredient.entity';
 
 describe('Ingredient Controller', (): void => {
   let controller: IngredientController;
@@ -125,6 +127,15 @@ describe('Ingredient Controller', (): void => {
       });
 
       expect(returned).toBe(ingredientResponse);
+    });
+
+    it('raises NotFoundException when attempting to update a non-existent ingredient', async (): Promise<void> => {
+      const missingIngredientId = ingredientResponse.id + 1;
+      service.findById.mockRejectedValue(new EntityNotFoundError(Ingredient, ''));
+
+      await expect(controller.update(missingIngredientId, {
+        name: ingredientResponse.name,
+      })).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });

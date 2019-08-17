@@ -17,6 +17,7 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
@@ -72,6 +73,13 @@ export class IngredientController {
     @Param('id') id: number,
     @Body() ingredient: UpdateIngredient
   ): Promise<Ingredient> {
-    return this.ingredientService.update(id, ingredient);
+    try {
+      await this.ingredientService.findById([id]);
+      return this.ingredientService.update(id, ingredient);
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException(`Unable to update missing ingredient #${id}`);
+      }
+    }
   }
 }
