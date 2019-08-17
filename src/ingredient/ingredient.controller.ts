@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   Post,
   Body,
+  Put,
 } from '@nestjs/common';
 import {
   ApiUseTags,
@@ -16,10 +17,12 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientService } from './ingredient.service';
 import { Ingredient } from './ingredient.entity';
 import { IngredientResponse } from './dto/ingredientResponse.dto';
 import { CreateIngredient } from './dto/createIngredient.dto';
+import { UpdateIngredient } from './dto/updateIngredient.dto';
 
 @ApiUseTags('ingredient')
 @Controller('ingredient')
@@ -60,5 +63,23 @@ export class IngredientController {
     @Body() ingredient: CreateIngredient
   ): Promise<Ingredient> {
     return this.ingredientService.create(ingredient);
+  }
+
+  @Put(':id')
+  @ApiOperation({ title: 'Update an existing ingredient' })
+  @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully updated' })
+  @ApiBadRequestResponse({ description: 'Array of validation errors' })
+  public async update(
+    @Param('id') id: number,
+    @Body() ingredient: UpdateIngredient
+  ): Promise<Ingredient> {
+    try {
+      await this.ingredientService.findById([id]);
+      return this.ingredientService.update(id, ingredient);
+    } catch (error) {
+      if (error instanceof EntityNotFoundError) {
+        throw new NotFoundException(`Unable to update missing ingredient #${id}`);
+      }
+    }
   }
 }

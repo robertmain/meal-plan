@@ -162,4 +162,34 @@ describe('Base Service', (): void => {
       expect(entity.name).toBe(mockEntity.name);
     });
   });
+  describe('update', (): void => {
+    it('updates an existing entity in the database', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .save(It.isValue({
+          id: mockEntity.id,
+          name: mockEntity.name + mockEntity.name,
+        })))
+        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+        .verifiable();
+
+      await service.update(mockEntity.id, {
+        name: mockEntity.name + mockEntity.name,
+      });
+    });
+    it('returns the updated entity', async (): Promise<void> => {
+      repository.setup((mockRepo): Promise<Entity> => mockRepo
+        .save(It.isAny()))
+        .returns((): Promise<Entity> => Promise.resolve({
+          ...mockEntity,
+          name: mockEntity.name + mockEntity.name,
+        }))
+        .verifiable();
+
+      const entity = await service.update(mockEntity.id, {
+        name: mockEntity.name + mockEntity.name,
+      });
+      expect(entity).toBeTruthy();
+      expect(entity.name).toBe(mockEntity.name + mockEntity.name);
+    });
+  });
 });
