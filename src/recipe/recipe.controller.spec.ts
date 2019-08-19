@@ -1,9 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { NotFoundException } from '@nestjs/common';
 import { CreateRecipe } from './dto/createRecipe.dto';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { Ingredient } from '../ingredient/ingredient.entity';
+import { UpdateRecipe } from './dto/updateRecipe.dto';
 import { RecipeResponse } from './dto/recipeResponse';
 
 describe('Recipe Controller', (): void => {
@@ -106,6 +109,41 @@ describe('Recipe Controller', (): void => {
         ...newRecipe,
         ingredients,
       });
+    });
+  });
+
+  describe('update', (): void => {
+    const recipe: UpdateRecipe = {
+      name: recipeResponse.name,
+      description: recipeResponse.descripion,
+    };
+
+    it('updates an existing recipe', async (): Promise<void> => {
+      await controller.update(18, recipe);
+
+      expect(services.recipe.update).toHaveBeenCalledTimes(1);
+      expect(services.recipe.update).toHaveBeenCalledWith(18, recipe);
+    });
+
+    it('returns the updated recipe', async (): Promise<void> => {
+      services.recipe.update.mockResolvedValue(recipeResponse);
+
+      const returned = await controller.update(recipeResponse.id, {
+        name: recipeResponse.name,
+      });
+
+      expect(returned).toBe(recipeResponse);
+    });
+
+    it('raises NotFoundException when attempting to update a non-existent recipe', async (): Promise<void> => {
+      const missingIngredientId = recipeResponse.id + 1;
+      services.ingredient.findById.mockRejectedValue(
+        new EntityNotFoundError(Ingredient, '')
+      );
+
+      await expect(controller.update(missingIngredientId, {
+        name: recipeResponse.name,
+      })).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });
