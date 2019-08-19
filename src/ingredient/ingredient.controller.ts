@@ -69,6 +69,7 @@ export class IngredientController {
   @ApiOperation({ title: 'Update an existing ingredient' })
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully updated' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
+  @ApiNotFoundResponse({ description: 'Thrown if attempting to update a non-existant ingredient' })
   public async update(
     @Param('id') id: number,
     @Body() ingredient: UpdateIngredient
