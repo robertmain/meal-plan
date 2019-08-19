@@ -12,8 +12,14 @@ describe('Recipe Controller', (): void => {
     create: jest.fn(),
   };
 
-  const ingredientService = {
-    findById: jest.fn(),
+  const services = {
+    recipe: {
+      create: jest.fn(),
+      update: jest.fn(),
+    },
+    ingredient: {
+      findById: jest.fn(),
+    },
   };
 
   beforeEach(async (): Promise<void> => {
@@ -22,16 +28,23 @@ describe('Recipe Controller', (): void => {
       providers: [
         {
           provide: RecipeService,
-          useValue: recipeService,
+          useValue: services.recipe,
         },
         {
           provide: IngredientService,
-          useValue: ingredientService,
+          useValue: services.ingredient,
         },
       ],
     }).compile();
 
     controller = module.get<RecipeController>(RecipeController);
+  });
+
+  afterEach((): void => {
+    Object.values(services).forEach((service): void => {
+      Object.entries(service)
+        .forEach(([method]): void => service[method].mockReset());
+    });
   });
 
   describe('create', (): void => {
@@ -43,11 +56,11 @@ describe('Recipe Controller', (): void => {
     it('creates a new recipe', async (): Promise<void> => {
       await controller.create(newRecipe);
 
-      expect(recipeService.create).toHaveBeenCalledWith(newRecipe);
+      expect(services.recipe.create).toHaveBeenCalledWith(newRecipe);
     });
 
     it('returns the newly created recipe', async (): Promise<void> => {
-      recipeService.create.mockResolvedValue({
+      services.recipe.create.mockResolvedValue({
         ...newRecipe,
         id: 6,
         createdAt: new Date(),
@@ -67,10 +80,11 @@ describe('Recipe Controller', (): void => {
 
       expect(recipe).toEqual(newRecipe);
     });
+
     it('assigns existing ingredients to the newly created recipe', async (): Promise<void> => {
       const ingredientIds = [2, 6, 8, 1, 9];
       const ingredients = ingredientIds.map((id): Ingredient => ({
-        id,
+      services.ingredient.findById.mockResolvedValue(ingredients);
         name: 'Foo',
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -83,8 +97,8 @@ describe('Recipe Controller', (): void => {
         ingredients: ingredientIds,
       });
 
-      expect(ingredientService.findById).toHaveBeenCalledWith(ingredientIds);
-      expect(recipeService.create).toHaveBeenCalledWith({
+      expect(services.ingredient.findById).toHaveBeenCalledWith(ingredientIds);
+      expect(services.recipe.create).toHaveBeenCalledWith({
         ...newRecipe,
         ingredients,
       });
