@@ -4,12 +4,22 @@ import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { Ingredient } from '../ingredient/ingredient.entity';
+import { RecipeResponse } from './dto/recipeResponse';
 
 describe('Recipe Controller', (): void => {
   let controller: RecipeController;
 
-  const recipeService = {
-    create: jest.fn(),
+  const recipeResponse: RecipeResponse = {
+    id: 273,
+    name: 'Beef Casserole',
+    descripion: 'Rich beef stew in mushroom gravy',
+    createdAt: new Date(),
+    ingredients: [12, 43, 7, 22, 692].map((ingredientId): Ingredient => ({
+      id: ingredientId,
+      name: `Ingredient ${ingredientId}`,
+      recipe: [],
+      createdAt: new Date(),
+    })),
   };
 
   const services = {
@@ -49,8 +59,8 @@ describe('Recipe Controller', (): void => {
 
   describe('create', (): void => {
     const newRecipe: CreateRecipe = {
-      name: 'Hearty Beef Stew',
-      description: 'A nice winter beef stew',
+      name: recipeResponse.name,
+      description: recipeResponse.descripion,
     };
 
     it('creates a new recipe', async (): Promise<void> => {
@@ -62,9 +72,9 @@ describe('Recipe Controller', (): void => {
     it('returns the newly created recipe', async (): Promise<void> => {
       services.recipe.create.mockResolvedValue({
         ...newRecipe,
-        id: 6,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        id: recipeResponse.id,
+        createdAt: recipeResponse.createdAt,
+        updatedAt: recipeResponse.createdAt,
       });
 
       const {
@@ -82,15 +92,9 @@ describe('Recipe Controller', (): void => {
     });
 
     it('assigns existing ingredients to the newly created recipe', async (): Promise<void> => {
-      const ingredientIds = [2, 6, 8, 1, 9];
-      const ingredients = ingredientIds.map((id): Ingredient => ({
+      const { ingredients } = recipeResponse;
+      const ingredientIds = ingredients.map(({ id }): number => id);
       services.ingredient.findById.mockResolvedValue(ingredients);
-        name: 'Foo',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        recipe: [],
-      }));
-      ingredientService.findById.mockResolvedValue(ingredients);
 
       await controller.create({
         ...newRecipe,
