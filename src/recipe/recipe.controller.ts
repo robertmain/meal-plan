@@ -42,15 +42,8 @@ export class RecipeController {
   @ApiOperation({ title: 'Create a new recipe with associated ingredients' })
   @ApiCreatedResponse({ type: RecipeResponse, description: 'Recipe was successfully created' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
-  public async create(
-    @Body() { ingredients, ...recipe }: CreateRecipe
-  ): Promise<Recipe> {
-    const allIngredients = await this.ingredient.findById(ingredients);
-
-    const newRecipe = await this.recipe.create({
-      ...recipe,
-      ingredients: allIngredients,
-    });
+  public async create(@Body() recipe: CreateRecipe): Promise<Recipe> {
+    const [newRecipe] = await this.recipe.save([recipe]);
 
     return newRecipe;
   }
@@ -62,15 +55,14 @@ export class RecipeController {
   @ApiNotFoundResponse({ description: 'Thrown  if the recipe being upated cannot be found' })
   public async update(
     id: number,
-    @Body() { ingredients, ...recipe }: UpdateRecipe
+    @Body() recipe: UpdateRecipe
   ): Promise<Recipe> {
     try {
-      const recipeIngredients = await this.ingredient.findById(ingredients);
-
-      const updatedRecipe = await this.recipe.update(id, {
+      await this.recipe.findById([id]);
+      const [updatedRecipe] = await this.recipe.save([{
+        id,
         ...recipe,
-        ingredients: recipeIngredients,
-      });
+      }]);
 
       return updatedRecipe;
     } catch (error) {

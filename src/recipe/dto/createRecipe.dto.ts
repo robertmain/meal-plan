@@ -1,5 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsDefined, Allow } from 'class-validator';
+import { Ingredient } from 'src/ingredient/ingredient.entity';
 
 export abstract class CreateRecipe {
   @IsDefined()
@@ -23,9 +24,22 @@ export abstract class CreateRecipe {
   @Allow()
   @ApiModelProperty({
     description: 'An array of ingredient IDs to assign to this recipe',
-    example: [27, 19, 11, 731],
+    example: [
+      {
+        id: 2,
+        name: 'Beef',
+        createdAt: new Date().toISOString(),
+        updateDat: new Date().toISOString(),
+      },
+      {
+        id: 8,
+        name: 'Mushrooms',
+        createdAt: new Date().toISOString(),
+        updateDat: new Date().toISOString(),
+      },
+    ],
     required: false,
     default: [],
   })
-  public ingredients?: number[] = [];
+  public ingredients?: Ingredient[] = [];
 }

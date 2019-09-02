@@ -21,8 +21,7 @@ describe('Ingredient Controller', (): void => {
     ingredient: {
       findById: jest.fn(),
       findAll: jest.fn(),
-      create: jest.fn(),
-      update: jest.fn(),
+      save: jest.fn(),
     },
   };
 
@@ -94,13 +93,11 @@ describe('Ingredient Controller', (): void => {
     it('creates a single ingredient', async (): Promise<void> => {
       await controller.create(newIngredient);
 
-      expect(services.ingredient.create).toHaveBeenCalledTimes(1);
-      expect(services.ingredient.create).toHaveBeenCalledWith({
-        ...newIngredient,
-      });
+      expect(services.ingredient.save).toHaveBeenCalledTimes(1);
+      expect(services.ingredient.save).toHaveBeenCalledWith([newIngredient]);
     });
     it('returns the newly created ingredient', async (): Promise<void> => {
-      services.ingredient.create.mockResolvedValue(ingredientResponse);
+      services.ingredient.save.mockResolvedValue(ingredientResponse);
 
       const ingredient = await controller.create(newIngredient);
 
@@ -115,15 +112,15 @@ describe('Ingredient Controller', (): void => {
     it('updates an existing ingredient', async (): Promise<void> => {
       await controller.update(ingredientResponse.id, ingredient);
 
-      expect(services.ingredient.update).toHaveBeenCalledTimes(1);
-      expect(services.ingredient.update).toHaveBeenCalledWith(
-        ingredientResponse.id,
-        ingredient
-      );
+      expect(services.ingredient.save).toHaveBeenCalledTimes(1);
+      expect(services.ingredient.save).toHaveBeenCalledWith([{
+        id: ingredientResponse.id,
+        ...ingredient,
+      }]);
     });
 
     it('returns the updated ingredient', async (): Promise<void> => {
-      services.ingredient.update.mockResolvedValue(ingredientResponse);
+      services.ingredient.save.mockResolvedValue(ingredientResponse);
 
       const returned = await controller.update(ingredientResponse.id, {
         name: ingredient.name,

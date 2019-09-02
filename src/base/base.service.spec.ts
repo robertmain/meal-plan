@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Repository, FindManyOptions } from 'typeorm';
+import { Repository, FindManyOptions, DeepPartial } from 'typeorm';
 import {
   Mock,
   IMock,
@@ -142,54 +142,49 @@ describe('Base Service', (): void => {
       await service.findAll(undefined, options);
     });
   });
-  describe('create', (): void => {
-    it('creates a new entity in the database', async (): Promise<void> => {
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
-        .save(It.isValue({ name: mockEntity.name })))
-        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+  describe('save', (): void => {
+    it('writes new entities to the database', async (): Promise<void> => {
+      const newEntity: DeepPartial<Entity> = {
+        name: mockEntity.name,
+      };
+
+      repository.setup((mockRepo): Promise<DeepPartial<Entity>[]> => mockRepo
+        .save(It.isValue([newEntity])))
+        .returns((): Promise<Entity[]> => Promise.resolve([mockEntity]))
         .verifiable();
 
-      await service.create({ name: mockEntity.name });
+      await service.save([newEntity]);
     });
-    it('returns the newly created entity', async (): Promise<void> => {
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
-        .save(It.isValue({ name: mockEntity.name })))
-        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
+
+    it('updates existing entities in the database', async (): Promise<void> => {
+      const existingEntity: DeepPartial<Entity> = {
+        id: mockEntity.id,
+        name: mockEntity.name,
+      };
+
+      repository.setup((mockRepo): Promise<DeepPartial<Entity>[]> => mockRepo
+        .save(It.isValue([existingEntity])))
+        .returns((): Promise<Entity[]> => Promise.resolve([mockEntity]))
         .verifiable();
 
-      const entity = await service.create({ name: mockEntity.name });
-      expect(entity).toBeTruthy();
-      expect(entity.name).toBe(mockEntity.name);
+      await service.save([existingEntity]);
     });
-  });
-  describe('update', (): void => {
-    it('updates an existing entity in the database', async (): Promise<void> => {
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
-        .save(It.isValue({
-          id: mockEntity.id,
-          name: mockEntity.name + mockEntity.name,
-        })))
-        .returns((): Promise<Entity> => Promise.resolve(mockEntity))
-        .verifiable();
 
-      await service.update(mockEntity.id, {
-        name: mockEntity.name + mockEntity.name,
-      });
-    });
-    it('returns the updated entity', async (): Promise<void> => {
-      repository.setup((mockRepo): Promise<Entity> => mockRepo
+    it('returns updated entites after saving', async (): Promise<void> => {
+      const existingEntity: DeepPartial<Entity> = {
+        id: mockEntity.id,
+        name: mockEntity.name,
+      };
+
+      repository.setup((mockRepo): Promise<DeepPartial<Entity>[]> => mockRepo
         .save(It.isAny()))
-        .returns((): Promise<Entity> => Promise.resolve({
-          ...mockEntity,
-          name: mockEntity.name + mockEntity.name,
-        }))
+        .returns((): Promise<Entity[]> => Promise.resolve([mockEntity]))
         .verifiable();
 
-      const entity = await service.update(mockEntity.id, {
-        name: mockEntity.name + mockEntity.name,
-      });
-      expect(entity).toBeTruthy();
-      expect(entity.name).toBe(mockEntity.name + mockEntity.name);
+      const results = await service.save([existingEntity]);
+
+      expect(results).toBeTruthy();
+      expect(results).toBeInstanceOf(Array);
     });
   });
 });

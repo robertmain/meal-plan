@@ -27,8 +27,8 @@ describe('Recipe Controller', (): void => {
 
   const services = {
     recipe: {
-      create: jest.fn(),
-      update: jest.fn(),
+      save: jest.fn(),
+      findById: jest.fn(),
     },
     ingredient: {
       findById: jest.fn(),
@@ -67,18 +67,19 @@ describe('Recipe Controller', (): void => {
     };
 
     it('creates a new recipe', async (): Promise<void> => {
+      services.recipe.save.mockResolvedValue([newRecipe]);
       await controller.create(newRecipe);
 
-      expect(services.recipe.create).toHaveBeenCalledWith(newRecipe);
+      expect(services.recipe.save).toHaveBeenCalledWith([newRecipe]);
     });
 
     it('returns the newly created recipe', async (): Promise<void> => {
-      services.recipe.create.mockResolvedValue({
+      services.recipe.save.mockResolvedValue([{
         ...newRecipe,
         id: recipeResponse.id,
         createdAt: recipeResponse.createdAt,
         updatedAt: recipeResponse.createdAt,
-      });
+      }]);
 
       const {
         id,
@@ -93,23 +94,6 @@ describe('Recipe Controller', (): void => {
 
       expect(recipe).toEqual(newRecipe);
     });
-
-    it('assigns existing ingredients to the newly created recipe', async (): Promise<void> => {
-      const { ingredients } = recipeResponse;
-      const ingredientIds = ingredients.map(({ id }): number => id);
-      services.ingredient.findById.mockResolvedValue(ingredients);
-
-      await controller.create({
-        ...newRecipe,
-        ingredients: ingredientIds,
-      });
-
-      expect(services.ingredient.findById).toHaveBeenCalledWith(ingredientIds);
-      expect(services.recipe.create).toHaveBeenCalledWith({
-        ...newRecipe,
-        ingredients,
-      });
-    });
   });
 
   describe('update', (): void => {
@@ -121,12 +105,16 @@ describe('Recipe Controller', (): void => {
     it('updates an existing recipe', async (): Promise<void> => {
       await controller.update(18, recipe);
 
-      expect(services.recipe.update).toHaveBeenCalledTimes(1);
-      expect(services.recipe.update).toHaveBeenCalledWith(18, recipe);
+      expect(services.recipe.save).toHaveBeenCalledTimes(1);
+      expect(services.recipe.save).toHaveBeenCalledWith([{
+        id: 18,
+        ...recipe,
+      }]);
     });
 
     it('returns the updated recipe', async (): Promise<void> => {
-      services.recipe.update.mockResolvedValue(recipeResponse);
+      services.recipe.findById.mockResolvedValue([recipeResponse]);
+      services.recipe.save.mockResolvedValue([recipeResponse]);
 
       const returned = await controller.update(recipeResponse.id, {
         name: recipeResponse.name,
@@ -137,7 +125,7 @@ describe('Recipe Controller', (): void => {
 
     it('raises NotFoundException when attempting to update a non-existent recipe', async (): Promise<void> => {
       const missingIngredientId = recipeResponse.id + 1;
-      services.ingredient.findById.mockRejectedValue(
+      services.recipe.findById.mockRejectedValue(
         new EntityNotFoundError(Ingredient, '')
       );
 
