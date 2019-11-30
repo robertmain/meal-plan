@@ -5,8 +5,9 @@ import { AppModule } from './app.module';
 import packageFile from '../package.json';
 
 const { name, description, version } = packageFile;
+const { SERVER_PORT } = process.env;
 
-async function bootstrap(): Promise<void> {
+(async (): Promise<void> => {
   const app = await NestFactory.create(AppModule);
   const options = new DocumentBuilder()
     .setTitle((name[0].toUpperCase() + name.slice(1)).replace(/-/gi, ' '))
@@ -26,6 +27,5 @@ async function bootstrap(): Promise<void> {
         .map(([, value]): string => value)).join()
     ),
   }));
-  await app.listen(3000);
-}
-bootstrap();
+  await app.listen(SERVER_PORT);
+})();
