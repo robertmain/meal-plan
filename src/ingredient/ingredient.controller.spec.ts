@@ -17,11 +17,12 @@ describe('Ingredient Controller', (): void => {
     createdAt: new Date(),
   };
 
-  const service = {
-    findById: jest.fn(),
-    findAll: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
+  const services = {
+    ingredient: {
+      findById: jest.fn(),
+      findAll: jest.fn(),
+      save: jest.fn(),
+    },
   };
 
   beforeEach(async (): Promise<void> => {
@@ -30,7 +31,7 @@ describe('Ingredient Controller', (): void => {
       providers: [
         {
           provide: IngredientService,
-          useValue: service,
+          useValue: services.ingredient,
         },
       ],
     }).compile();
@@ -39,8 +40,9 @@ describe('Ingredient Controller', (): void => {
   });
 
   afterEach((): void => {
-    Object.keys(service).forEach((method): void => {
-      service[method].mockReset();
+    Object.values(services).forEach((service): void => {
+      Object.entries(service)
+        .forEach(([method]): void => service[method].mockReset());
     });
   });
 
@@ -48,37 +50,37 @@ describe('Ingredient Controller', (): void => {
     it('retrieves all ingredients in the database', async (): Promise<void> => {
       const mockIngredients = Array(10).fill(ingredientResponse);
 
-      service.findAll.mockResolvedValue(mockIngredients);
+      services.ingredient.findAll.mockResolvedValue(mockIngredients);
 
       const ingredients = await controller.root();
 
-      expect(service.findAll).toHaveBeenCalledTimes(1);
+      expect(services.ingredient.findAll).toHaveBeenCalledTimes(1);
       expect(ingredients).toHaveLength(mockIngredients.length);
       expect(ingredients).toContain(ingredientResponse);
     });
     it('returns an empty array if there are no ingredients', async (): Promise<void> => {
-      service.findAll.mockResolvedValue([]);
+      services.ingredient.findAll.mockResolvedValue([]);
     });
   });
 
   describe('getOne', (): void => {
     it('can retrieve a single ingredient by ID', async (): Promise<void> => {
-      service.findById.mockResolvedValue([ingredientResponse]);
+      services.ingredient.findById.mockResolvedValue([ingredientResponse]);
 
       const ingredient = await controller.getOne(26);
 
-      expect(service.findById).toHaveBeenCalledTimes(1);
-      expect(service.findById).toHaveBeenCalledWith([26]);
+      expect(services.ingredient.findById).toHaveBeenCalledTimes(1);
+      expect(services.ingredient.findById).toHaveBeenCalledWith([26]);
       expect(ingredient).toBe(ingredientResponse);
     });
     it('handles missing ingredients by throwing a NotFoundException', async (): Promise<void> => {
-      service.findById.mockResolvedValue([]);
+      services.ingredient.findById.mockResolvedValue([]);
 
       await expect(controller.getOne(26)).rejects
         .toBeInstanceOf(NotFoundException);
     });
     it('allows un-caught exceptions to bubble', async (): Promise<void> => {
-      service.findById.mockRejectedValue(new Error('Error'));
+      services.ingredient.findById.mockRejectedValue(new Error('Error'));
 
       await expect(controller.getOne(26)).rejects
         .toBeInstanceOf(Error);
@@ -91,13 +93,11 @@ describe('Ingredient Controller', (): void => {
     it('creates a single ingredient', async (): Promise<void> => {
       await controller.create(newIngredient);
 
-      expect(service.create).toHaveBeenCalledTimes(1);
-      expect(service.create).toHaveBeenCalledWith({
-        ...newIngredient,
-      });
+      expect(services.ingredient.save).toHaveBeenCalledTimes(1);
+      expect(services.ingredient.save).toHaveBeenCalledWith([newIngredient]);
     });
     it('returns the newly created ingredient', async (): Promise<void> => {
-      service.create.mockResolvedValue(ingredientResponse);
+      services.ingredient.save.mockResolvedValue(ingredientResponse);
 
       const ingredient = await controller.create(newIngredient);
 
@@ -112,15 +112,15 @@ describe('Ingredient Controller', (): void => {
     it('updates an existing ingredient', async (): Promise<void> => {
       await controller.update(ingredientResponse.id, ingredient);
 
-      expect(service.update).toHaveBeenCalledTimes(1);
-      expect(service.update).toHaveBeenCalledWith(
-        ingredientResponse.id,
-        ingredient
-      );
+      expect(services.ingredient.save).toHaveBeenCalledTimes(1);
+      expect(services.ingredient.save).toHaveBeenCalledWith([{
+        id: ingredientResponse.id,
+        ...ingredient,
+      }]);
     });
 
     it('returns the updated ingredient', async (): Promise<void> => {
-      service.update.mockResolvedValue(ingredientResponse);
+      services.ingredient.save.mockResolvedValue(ingredientResponse);
 
       const returned = await controller.update(ingredientResponse.id, {
         name: ingredient.name,
@@ -131,7 +131,9 @@ describe('Ingredient Controller', (): void => {
 
     it('raises NotFoundException when attempting to update a non-existent ingredient', async (): Promise<void> => {
       const missingIngredientId = ingredientResponse.id + 1;
-      service.findById.mockRejectedValue(new EntityNotFoundError(Ingredient, ''));
+      services.ingredient.findById.mockRejectedValue(
+        new EntityNotFoundError(Ingredient, '')
+      );
 
       await expect(controller.update(missingIngredientId, {
         name: ingredientResponse.name,

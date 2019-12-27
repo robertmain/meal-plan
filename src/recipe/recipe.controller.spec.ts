@@ -1,19 +1,38 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { NotFoundException } from '@nestjs/common';
 import { CreateRecipe } from './dto/createRecipe.dto';
 import { RecipeController } from './recipe.controller';
 import { RecipeService } from './recipe.service';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { Ingredient } from '../ingredient/ingredient.entity';
+import { UpdateRecipe } from './dto/updateRecipe.dto';
+import { RecipeResponse } from './dto/recipeResponse';
 
 describe('Recipe Controller', (): void => {
   let controller: RecipeController;
 
-  const recipeService = {
-    create: jest.fn(),
+  const recipeResponse: RecipeResponse = {
+    id: 273,
+    name: 'Beef Casserole',
+    descripion: 'Rich beef stew in mushroom gravy',
+    createdAt: new Date(),
+    ingredients: [12, 43, 7, 22, 692].map((ingredientId): Ingredient => ({
+      id: ingredientId,
+      name: `Ingredient ${ingredientId}`,
+      recipe: [],
+      createdAt: new Date(),
+    })),
   };
 
-  const ingredientService = {
-    findById: jest.fn(),
+  const services = {
+    recipe: {
+      save: jest.fn(),
+      findById: jest.fn(),
+    },
+    ingredient: {
+      findById: jest.fn(),
+    },
   };
 
   beforeEach(async (): Promise<void> => {
@@ -22,11 +41,11 @@ describe('Recipe Controller', (): void => {
       providers: [
         {
           provide: RecipeService,
-          useValue: recipeService,
+          useValue: services.recipe,
         },
         {
           provide: IngredientService,
-          useValue: ingredientService,
+          useValue: services.ingredient,
         },
       ],
     }).compile();
@@ -34,25 +53,33 @@ describe('Recipe Controller', (): void => {
     controller = module.get<RecipeController>(RecipeController);
   });
 
+  afterEach((): void => {
+    Object.values(services).forEach((service): void => {
+      Object.entries(service)
+        .forEach(([method]): void => service[method].mockReset());
+    });
+  });
+
   describe('create', (): void => {
     const newRecipe: CreateRecipe = {
-      name: 'Hearty Beef Stew',
-      description: 'A nice winter beef stew',
+      name: recipeResponse.name,
+      description: recipeResponse.descripion,
     };
 
     it('creates a new recipe', async (): Promise<void> => {
+      services.recipe.save.mockResolvedValue([newRecipe]);
       await controller.create(newRecipe);
 
-      expect(recipeService.create).toHaveBeenCalledWith(newRecipe);
+      expect(services.recipe.save).toHaveBeenCalledWith([newRecipe]);
     });
 
     it('returns the newly created recipe', async (): Promise<void> => {
-      recipeService.create.mockResolvedValue({
+      services.recipe.save.mockResolvedValue([{
         ...newRecipe,
-        id: 6,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+        id: recipeResponse.id,
+        createdAt: recipeResponse.createdAt,
+        updatedAt: recipeResponse.createdAt,
+      }]);
 
       const {
         id,
@@ -67,27 +94,44 @@ describe('Recipe Controller', (): void => {
 
       expect(recipe).toEqual(newRecipe);
     });
-    it('assigns existing ingredients to the newly created recipe', async (): Promise<void> => {
-      const ingredientIds = [2, 6, 8, 1, 9];
-      const ingredients = ingredientIds.map((id): Ingredient => ({
-        id,
-        name: 'Foo',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        recipe: [],
-      }));
-      ingredientService.findById.mockResolvedValue(ingredients);
+  });
 
-      await controller.create({
-        ...newRecipe,
-        ingredients: ingredientIds,
+  describe('update', (): void => {
+    const recipe: UpdateRecipe = {
+      name: recipeResponse.name,
+      description: recipeResponse.descripion,
+    };
+
+    it('updates an existing recipe', async (): Promise<void> => {
+      await controller.update(18, recipe);
+
+      expect(services.recipe.save).toHaveBeenCalledTimes(1);
+      expect(services.recipe.save).toHaveBeenCalledWith([{
+        id: 18,
+        ...recipe,
+      }]);
+    });
+
+    it('returns the updated recipe', async (): Promise<void> => {
+      services.recipe.findById.mockResolvedValue([recipeResponse]);
+      services.recipe.save.mockResolvedValue([recipeResponse]);
+
+      const returned = await controller.update(recipeResponse.id, {
+        name: recipeResponse.name,
       });
 
-      expect(ingredientService.findById).toHaveBeenCalledWith(ingredientIds);
-      expect(recipeService.create).toHaveBeenCalledWith({
-        ...newRecipe,
-        ingredients,
-      });
+      expect(returned).toBe(recipeResponse);
+    });
+
+    it('raises NotFoundException when attempting to update a non-existent recipe', async (): Promise<void> => {
+      const missingIngredientId = recipeResponse.id + 1;
+      services.recipe.findById.mockRejectedValue(
+        new EntityNotFoundError(Ingredient, '')
+      );
+
+      await expect(controller.update(missingIngredientId, {
+        name: recipeResponse.name,
+      })).rejects.toBeInstanceOf(NotFoundException);
     });
   });
 });

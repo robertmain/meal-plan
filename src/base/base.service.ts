@@ -44,19 +44,8 @@ export abstract class BaseService<Entity extends BaseEntity> {
     return records;
   }
 
-  public async create(entity: DeepPartial<Entity>): Promise<Entity> {
-    const savedEntity = await this.repository.save(entity);
-    return savedEntity;
-  }
-
-  public async update(
-    id: number,
-    entity: DeepPartial<Entity>
-  ): Promise<Entity> {
-    const updatedEntity = await this.repository.save({
-      ...entity,
-      id,
-    });
-    return updatedEntity;
+  public async save(entitites: DeepPartial<Entity>[]): Promise<Entity[]> {
+    const results = this.repository.save(entitites);
+    return results;
   }
 }
