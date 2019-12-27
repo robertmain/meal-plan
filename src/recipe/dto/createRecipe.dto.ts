@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { IsDefined, Allow } from 'class-validator';
-import { Ingredient } from 'src/ingredient/ingredient.entity';
+import { Ingredient } from '../../ingredient/ingredient.entity';
 
 export abstract class CreateRecipe {
   @IsDefined()
@@ -29,13 +29,13 @@ export abstract class CreateRecipe {
         id: 2,
         name: 'Beef',
         createdAt: new Date().toISOString(),
-        updateDat: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
       {
         id: 8,
         name: 'Mushrooms',
         createdAt: new Date().toISOString(),
-        updateDat: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
     ],
     required: false,
