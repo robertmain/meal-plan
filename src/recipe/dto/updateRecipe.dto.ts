@@ -23,22 +23,10 @@ export abstract class UpdateRecipe {
 
   @Allow()
   @ApiModelProperty({
-    description: 'An array of ingredient IDs to assign to this recipe',
-    example: [
-      {
-        id: 2,
-        name: 'Beef',
-        createdAt: new Date().toISOString(),
-        updateDat: new Date().toISOString(),
-      },
-      {
-        id: 8,
-        name: 'Mushrooms',
-        createdAt: new Date().toISOString(),
-        updateDat: new Date().toISOString(),
-      },
-    ],
+    description: 'An array of ingredients to assign to this recipe',
+    type: Ingredient,
     required: false,
+    isArray: true,
     default: [],
   })
   public ingredients?: Ingredient[] = [];
