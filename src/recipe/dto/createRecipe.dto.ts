@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDefined, Allow } from 'class-validator';
 import { Ingredient } from '../../ingredient/ingredient.entity';
 
@@ -7,39 +7,19 @@ export abstract class CreateRecipe {
   @ApiProperty({
     description: 'The name of the recipe',
     example: 'Hearty beef stew',
-    required: true,
-    default: '',
   })
   public name: string;
 
   @Allow()
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'An optional description of the recipe to create',
     example: 'A thick beef stew with a rich mushroom gravy',
-    required: false,
-    default: '',
   })
   public description?: string = '';
 
   @Allow()
-  @ApiProperty({
-    description: 'An array of ingredient IDs to assign to this recipe',
-    example: [
-      {
-        id: 2,
-        name: 'Beef',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      {
-        id: 8,
-        name: 'Mushrooms',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    ],
-    required: false,
-    default: [],
+  @ApiPropertyOptional({
+    description: 'An array of ingredients to assign to this recipe',
   })
   public ingredients?: Ingredient[] = [];
 }

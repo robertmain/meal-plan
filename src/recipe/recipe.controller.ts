@@ -18,7 +18,6 @@ import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { RecipeService } from './recipe.service';
 import { CreateRecipe } from './dto/createRecipe.dto';
-import { Recipe } from './recipe.entity';
 import { RecipeResponse } from './dto/recipeResponse';
 import { UpdateRecipe } from './dto/updateRecipe.dto';
 
@@ -42,7 +41,7 @@ export class RecipeController {
   @ApiOperation({ summary: 'Create a new recipe with associated ingredients' })
   @ApiCreatedResponse({ type: RecipeResponse, description: 'Recipe was successfully created' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
-  public async create(@Body() recipe: CreateRecipe): Promise<Recipe> {
+  public async create(@Body() recipe: CreateRecipe): Promise<RecipeResponse> {
     const [newRecipe] = await this.recipe.save([recipe]);
 
     return newRecipe;
@@ -56,7 +55,7 @@ export class RecipeController {
   public async update(
     id: number,
     @Body() recipe: UpdateRecipe
-  ): Promise<Recipe> {
+  ): Promise<RecipeResponse> {
     try {
       await this.recipe.findById([id]);
       const [updatedRecipe] = await this.recipe.save([{
