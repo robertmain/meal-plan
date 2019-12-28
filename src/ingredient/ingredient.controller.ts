@@ -10,7 +10,7 @@ import {
   Put,
 } from '@nestjs/common';
 import {
-  ApiUseTags,
+  ApiTags,
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiOperation,
@@ -24,7 +24,7 @@ import { IngredientResponse } from './dto/ingredientResponse.dto';
 import { CreateIngredient } from './dto/createIngredient.dto';
 import { UpdateIngredient } from './dto/updateIngredient.dto';
 
-@ApiUseTags('ingredient')
+@ApiTags('ingredient')
 @Controller('ingredient')
 @UseInterceptors(ClassSerializerInterceptor)
 export class IngredientController {
@@ -35,7 +35,7 @@ export class IngredientController {
   }
 
   @Get()
-  @ApiOperation({ title: 'Retrieve all ingredients in the database' })
+  @ApiOperation({ summary: 'Retrieve all ingredients in the database' })
   @ApiOkResponse({ type: IngredientResponse, description: 'All ingredients in the database(omitting deleted records)', isArray: true })
   public async root(): Promise<Ingredient[]> {
     const ingredients = await this.ingredientService.findAll();
@@ -43,7 +43,7 @@ export class IngredientController {
   }
 
   @Get(':id')
-  @ApiOperation({ title: 'Retrieve a single ingredient by ID' })
+  @ApiOperation({ summary: 'Retrieve a single ingredient by ID' })
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully located' })
   @ApiNotFoundResponse({ description: 'An ingredient of the requested ID could not be found' })
   public async getOne(@Param('id') id: number): Promise<Ingredient> {
@@ -56,7 +56,7 @@ export class IngredientController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Create a new ingredient' })
+  @ApiOperation({ summary: 'Create a new ingredient' })
   @ApiCreatedResponse({ type: IngredientResponse, description: 'Ingredient was successfully created' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
   public async create(
@@ -66,7 +66,7 @@ export class IngredientController {
   }
 
   @Put(':id')
-  @ApiOperation({ title: 'Update an existing ingredient' })
+  @ApiOperation({ summary: 'Update an existing ingredient' })
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully updated' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
   @ApiNotFoundResponse({ description: 'Thrown if attempting to update a non-existant ingredient' })

@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {
-  ApiUseTags,
+  ApiTags,
   ApiBadRequestResponse,
   ApiOperation,
   ApiCreatedResponse,
@@ -22,7 +22,7 @@ import { Recipe } from './recipe.entity';
 import { RecipeResponse } from './dto/recipeResponse';
 import { UpdateRecipe } from './dto/updateRecipe.dto';
 
-@ApiUseTags('recipe')
+@ApiTags('recipe')
 @Controller('recipe')
 @UseInterceptors(ClassSerializerInterceptor)
 export class RecipeController {
@@ -39,7 +39,7 @@ export class RecipeController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Create a new recipe with associated ingredients' })
+  @ApiOperation({ summary: 'Create a new recipe with associated ingredients' })
   @ApiCreatedResponse({ type: RecipeResponse, description: 'Recipe was successfully created' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
   public async create(@Body() recipe: CreateRecipe): Promise<Recipe> {
@@ -49,7 +49,7 @@ export class RecipeController {
   }
 
   @Put(':id')
-  @ApiOperation({ title: 'Update an existing recipe in the database' })
+  @ApiOperation({ summary: 'Update an existing recipe in the database' })
   @ApiCreatedResponse({ type: RecipeResponse, description: 'Recipe was successfully created' })
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
   @ApiNotFoundResponse({ description: 'Thrown  if the recipe being upated cannot be found' })

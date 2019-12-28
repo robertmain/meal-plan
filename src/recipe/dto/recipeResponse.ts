@@ -1,40 +1,40 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Ingredient } from '../../ingredient/ingredient.entity';
 
 export abstract class RecipeResponse {
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Recipe primary key ID',
     example: 85,
   })
   public id: number;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'The name of the created recipe',
     example: 'Beef Stew',
   })
   public name: string;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'A short description of the recipe',
     example: 'A rich beef stew in mushroom gravy',
   })
   public descripion: string;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'The date the recipe was created (in ISO-8601 format)',
     type: 'string',
     example: new Date().toISOString(),
   })
   public createdAt: Date;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'The date the recipe was last updated (in ISO-8601 format)',
     type: 'string',
     example: new Date().toISOString(),
   })
   public updatedAt?: Date;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'All the ingredients required by this recipe',
     type: Ingredient,
     isArray: true,
