@@ -10,7 +10,12 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "resolveJsonModule":  true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "plugins": [
+      {
+        "name": "@nestjs/swagger/plugin"
+      }
+    ],
   },
   "exclude": ["node_modules"]
 }

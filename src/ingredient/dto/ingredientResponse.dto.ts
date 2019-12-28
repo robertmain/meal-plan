@@ -1,25 +1,25 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export abstract class IngredientResponse {
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Ingredient primary key ID',
   })
   public id: number;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'The full name of the ingredient',
     example: 'Quinoa',
   })
   public name: string;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Ingredient creation date (in ISO-8601 format)',
     type: 'string',
     example: new Date().toISOString(),
   })
   public createdAt: Date;
 
-  @ApiModelProperty({
+  @ApiProperty({
     description: 'Ingredient last update date (in ISO-8601 format)',
     type: 'string',
     example: new Date().toISOString(),
