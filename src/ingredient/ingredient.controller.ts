@@ -37,7 +37,7 @@ export class IngredientController {
   @Get()
   @ApiOperation({ summary: 'Retrieve all ingredients in the database' })
   @ApiOkResponse({ type: IngredientResponse, description: 'All ingredients in the database(omitting deleted records)', isArray: true })
-  public async root(): Promise<Ingredient[]> {
+  public async root(): Promise<IngredientResponse[]> {
     const ingredients = await this.ingredientService.findAll();
     return ingredients;
   }
@@ -46,7 +46,7 @@ export class IngredientController {
   @ApiOperation({ summary: 'Retrieve a single ingredient by ID' })
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully located' })
   @ApiNotFoundResponse({ description: 'An ingredient of the requested ID could not be found' })
-  public async getOne(@Param('id') id: number): Promise<Ingredient> {
+  public async getOne(@Param('id') id: number): Promise<IngredientResponse> {
     const [ingredient] = await this.ingredientService.findById([id]);
 
     if (!ingredient) {
