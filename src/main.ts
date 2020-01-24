@@ -2,9 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
-import packageFile from '../package.json';
+import { name, description, version } from '../package.json';
 
-const { name, description, version } = packageFile;
 const { SERVER_PORT, NODE_ENV } = process.env;
 
 (async (): Promise<void> => {
