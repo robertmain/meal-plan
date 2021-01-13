@@ -3,6 +3,15 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "plugins": ["@nestjs/swagger/plugin"]
+    "plugins": [
+      "@nestjs/swagger/plugin",
+      {
+        "name": "@nestjs/swagger/plugin",
+        "options": {
+          "classValidatorShim": true,
+          "dtoFileNameSuffix": "dto"
+        }
+      }
+    ]
   }
 }
