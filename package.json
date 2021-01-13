@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^7.6.5",
-    "@nestjs/core": "^6.0.0",
+    "@nestjs/core": "^7.6.5",
     "@nestjs/platform-express": "^6.10.13",
     "@nestjs/typeorm": "^6.0.0",
     "axios": "^0.21.1",
@@ -67,14 +67,10 @@
     "tsconfig-paths": "^3.7.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "typemoq": "^2.1.0",
-<<<<<<< HEAD
-    "typescript": "^3.2.4",
+    "typescript": "^3.7.4",
     "webpack": "^4.39.2",
     "webpack-command": "^0.4.2",
     "webpack-node-externals": "^1.7.2"
-=======
-    "typescript": "^3.7.4"
->>>>>>> Version bump typescript to allow usage of Omit
   },
   "jest": {
     "moduleFileExtensions": [
