@@ -8,15 +8,22 @@ import { Ingredient } from './ingredient/ingredient.entity';
 import { BaseEntity } from './base';
 import { Recipe } from './recipe/recipe.entity';
 
+const {
+  DB_HOSTNAME,
+  DB_PORT,
+  DB_DATABASE,
+  DB_USERNAME,
+  DB_PASSWORD,
+} = process.env;
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      type: 'mariadb',
-      host: 'localhost',
-      port: 3306,
-      username: 'mealplan',
-      password: 'abc',
-      database: 'meal-plan',
+      type: 'postgres',
+      host: DB_HOSTNAME,
+      port: parseInt(DB_PORT, 10),
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_DATABASE,
       entities: [
         BaseEntity,
         Ingredient,
