@@ -31,8 +31,6 @@
     "class-validator": "^0.9.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
-    "mysql": "^2.17.1",
-    "nest-cli": "0.0.5",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.12",
     "rimraf": "^2.6.2",
