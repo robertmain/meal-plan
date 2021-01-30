@@ -1,6 +1,5 @@
-
-const { IgnorePlugin, optimize } = require('webpack');
 const path = require('path');
+const { IgnorePlugin } = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -78,7 +77,6 @@ module.exports = ({ mode = 'development' }) => ({
       contextRegExp: /@nestjs/,
       resourceRegExp: new RegExp(nestBlacklist.join('|')),
     }),
-    new optimize.ModuleConcatenationPlugin(),
   ],
   node: {
     __dirname: false,
