@@ -82,7 +82,8 @@ module.exports = {
       },
     ],
     radix: 'off',
-    'class-methods-use-this': 'off'
+    'class-methods-use-this': 'off',
+    'import/extensions': ['error', { 'ts': 'never' }]
   },
   settings: {
     'import/resolver': {
