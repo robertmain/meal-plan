@@ -1,4 +1,4 @@
-const path = require('path');
+const { join, resolve: _resolve } = require('path');
 const { IgnorePlugin } = require('webpack');
 const nodeExternals = require('webpack-node-externals');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -38,11 +38,11 @@ module.exports = ({ mode = 'development' }) => ({
   entry: ['./src/main.ts'],
   externals: [nodeExternals()],
   output: {
-    path: path.join(__dirname, 'dist'),
+    path: join(__dirname, 'dist'),
     filename: 'server.js',
   },
   resolve,
-  context: path.resolve(__dirname),
+  context: _resolve(__dirname),
   target: 'node',
   module: {
     rules: [
@@ -55,7 +55,7 @@ module.exports = ({ mode = 'development' }) => ({
       },
       {
         test: /\.tsx?$/,
-        include: path.resolve(__dirname, 'src'),
+        include: _resolve(__dirname, 'src'),
         exclude: /node_modules/,
         use: [
           {
