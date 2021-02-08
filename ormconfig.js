@@ -13,8 +13,8 @@ module.exports = {
   username: DB_USERNAME,
   password: DB_PASSWORD,
   database: DB_DATABASE,
-  entities: ['src/**/*.entity{.ts,.js}'],
-  migrations: ['src/migrations/*.ts'],
+  entities: ['src/server/**/*.entity{.ts,.js}'],
+  migrations: ['src/server/migrations/*.ts'],
   cli: {
     migrationsDir: 'src/server/migrations',
   },

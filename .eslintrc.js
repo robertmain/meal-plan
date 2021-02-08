@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
@@ -83,7 +84,9 @@ module.exports = {
     ],
     radix: 'off',
     'class-methods-use-this': 'off',
-    'import/extensions': ['error', { 'ts': 'never' }]
+    'import/extensions': 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
   },
   settings: {
     'import/resolver': {
@@ -93,4 +96,14 @@ module.exports = {
       },
     },
   },
+  overrides: [
+    {
+      files: [
+        'src/**/*.entity.ts'
+      ],
+      rules: {
+        'import/no-cycle': 0
+      }
+    },
+  ]
 };

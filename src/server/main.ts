@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { name, description, version } from '../package.json';
+import { name, description, version } from '../../package.json';
 
 const { SERVER_PORT, NODE_ENV } = process.env;
 
