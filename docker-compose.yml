@@ -29,7 +29,8 @@ services:
       - "127.0.0.1:3000:3000"
     volumes:
       - ".:/node:rw"
-    command: ["npm", "run", "start"]
+      - "./dist/public:/node/src/server/client:ro"
+    command: ["npm", "run", "start:dev"]
     links:
       - postgres
     depends_on:

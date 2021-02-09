@@ -4,6 +4,9 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     'airbnb-base',
+    'plugin:vue/base',
+    '@vue/airbnb',
+    '@vue/typescript/recommended',
   ],
   env: {
     browser: true,
@@ -15,6 +18,10 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
+  plugins: [
+    'vue',
+    '@typescript-eslint',
+  ],
   rules: {
     '@typescript-eslint/indent': ['error', 2],
     indent: ['error', 2],
@@ -99,11 +106,11 @@ module.exports = {
   overrides: [
     {
       files: [
-        'src/**/*.entity.ts'
+        'src/**/*.entity.ts',
       ],
       rules: {
-        'import/no-cycle': 0
-      }
+        'import/no-cycle': 0,
+      },
     },
-  ]
+  ],
 };
