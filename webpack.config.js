@@ -1,61 +1,50 @@
-const { join, resolve: _resolve } = require('path');
-const { IgnorePlugin } = require('webpack');
-const nodeExternals = require('webpack-node-externals');
+const { resolve: _resolve } = require('path');
+const { ProgressPlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { name } = require('./package.json');
+const { sep } = require('path');
+const WebpackStylish = require('webpack-stylish');
 
-/**
- * NestJs uses a custom wrapper around require() that allows it to show a
- * warning when some extra package needs to be installed. This causes problems
- * with webpack, so we're blacklisting packages we're not using with the
- * IgnorePlugin below.
- *
- * To de-blacklist a package, just remove it from this array.
- */
-const nestBlacklist = [
-  '^class-validator$',
-  '^class-transformer$',
-  '^cache-manager$',
-  '^@nestjs/microservices$',
-  // packages below are required from microservices
-  '^amqp-connection-manager$',
-  '^amqplib$',
-  '^grpc$',
-  '^mqtt$',
-  '^nats$',
-  '^redis$',
-];
-
-const resolve = {
-  extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  plugins: [
-    new TSConfigPathsPlugin(),
-  ],
+const client = {
+  src: {
+    rootDir: _resolve(__dirname, 'src', 'client') + sep,
+    app: _resolve(__dirname, 'src', 'client', 'app') + sep,
+  },
+  dist: {
+    rootDir: _resolve(__dirname, 'dist'),
+    app: _resolve(__dirname, 'dist', 'client'),
+  },
 };
 
 module.exports = ({ mode = 'development' }) => ({
+  target: 'web',
   mode,
-  entry: ['./src/main.ts'],
-  externals: [nodeExternals()],
-  output: {
-    path: join(__dirname, 'dist'),
-    filename: 'server.js',
+  entry: {
+    app: client.src.app + 'main.ts',
   },
-  resolve,
-  context: _resolve(__dirname),
-  target: 'node',
+  output: {
+    path: client.dist.app,
+  },
+  optimization: {
+    runtimeChunk: 'single',
+  },
+  resolve: {
+    extensions: ['.ts', '.js', '.vue'],
+    plugins: [
+      new TSConfigPathsPlugin({
+        configFile: client.src.rootDir + 'tsconfig.json',
+      }),
+    ],
+  },
+  context: client.src.rootDir,
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
         test: /\.tsx?$/,
-        include: _resolve(__dirname, 'src'),
+        include: client.src.rootDir,
         exclude: /node_modules/,
         use: [
           {
@@ -66,19 +55,41 @@ module.exports = ({ mode = 'development' }) => ({
           },
         ],
       },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          'css-loader',
+        ],
+      },
+      {
+        test: /\.(png|ico|jpg)/,
+        loader: 'url-loader',
+      },
     ],
   },
   plugins: [
-    new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: true,
-      verbose: mode === 'development',
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      minify: mode !== 'development',
+      favicon: client.src.app + 'assets/logo.png',
+      title: name.split(/-/)
+        .map((word) => word[0].toUpperCase() + word.slice(1))
+        .join(' '),
     }),
-    new IgnorePlugin({
-      contextRegExp: /@nestjs/,
-      resourceRegExp: new RegExp(nestBlacklist.join('|')),
-    }),
+    new VueLoaderPlugin(),
+    new WebpackStylish(),
+    new ProgressPlugin(),
   ],
-  node: {
-    __dirname: false,
-  },
 });
