@@ -1,7 +1,7 @@
 {
   "language": "ts",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "src/server",
   "compilerOptions": {
     "plugins": [
       "@nestjs/swagger/plugin",

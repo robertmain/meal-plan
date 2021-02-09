@@ -22,21 +22,21 @@
     "orm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm"
   },
   "dependencies": {
-    "@nestjs/common": "^7.6.5",
-    "@nestjs/core": "^7.6.5",
-    "@nestjs/platform-express": "^6.10.13",
+    "@nestjs/common": "^7.6.11",
+    "@nestjs/core": "^7.6.11",
+    "@nestjs/platform-express": "^7.6.11",
     "@nestjs/swagger": "^4.7.10",
     "@nestjs/typeorm": "^6.0.0",
     "axios": "^0.21.1",
     "class-transformer": "^0.2.0",
-    "class-validator": "^0.9.1",
+    "class-validator": "^0.13.1",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.3.3",
     "swagger-ui-express": "^4.1.6",
-    "typeorm": "^0.2.16"
+    "typeorm": "^0.2.31",
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
@@ -49,7 +49,7 @@
     "@babel/preset-env": "^7.12.13",
     "@nestjs/testing": "^6.0.0",
     "@types/express": "^4.16.0",
-    "@types/jest": "^23.3.13",
+    "@types/jest": "^23.3.14",
     "@types/node": "^10.12.18",
     "@types/supertest": "^2.0.7",
     "@typescript-eslint/eslint-plugin": "^4.15.0",
@@ -89,12 +89,13 @@
     "tsconfig-paths": "^3.7.0",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "typemoq": "^2.1.0",
-    "typescript": "^3.7.4",
+    "typescript": "^3.9.7",
     "vue-eslint-parser": "^7.4.1",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^5.21.2",
-    "webpack-cli": "^4.5.0"
+    "webpack-cli": "^4.5.0",
+    "webpack-node-externals": "^2.5.2"
   },
   "jest": {
     "moduleFileExtensions": [
