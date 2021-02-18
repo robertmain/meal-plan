@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { IngredientModule } from './ingredient/ingredient.module';
 import { RecipeModule } from './recipe/recipe.module';
 import { Ingredient } from './ingredient/ingredient.entity';
@@ -30,6 +31,10 @@ const {
         Recipe,
       ],
       migrations: [join(__dirname, '/migration/**/*.ts')],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, 'client'),
+      renderPath: '/',
     }),
     IngredientModule,
     RecipeModule,
