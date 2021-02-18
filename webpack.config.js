@@ -77,7 +77,7 @@ module.exports = ({ mode = 'development' }) => ({
       },
       {
         test: /\.(png|ico|jpg)/,
-        loader: 'url-loader',
+        loader: 'file-loader',
       },
     ],
   },
