@@ -4,6 +4,8 @@ const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { sep } = require('path');
+const nodeExternals = require('webpack-node-externals');
+const { IgnorePlugin } = require('webpack');
 
 const {
   APP_NAME,
@@ -16,77 +18,162 @@ const client = {
   },
   dist: {
     rootDir: _resolve(__dirname, 'dist'),
-    app: _resolve(__dirname, 'dist', 'client'),
+    app: _resolve(__dirname, 'dist', 'public'),
   },
 };
 
-module.exports = ({ mode = 'development' }) => ({
-  target: 'web',
-  mode,
-  entry: {
-    app: client.src.app + 'main.ts',
+const server = {
+  src: {
+    rootDir: _resolve(__dirname, 'src', 'server') + sep,
   },
-  output: {
-    path: client.dist.app,
+  dist: {
+    rootDir: _resolve(__dirname, 'dist'),
   },
-  optimization: {
-    runtimeChunk: 'single',
-  },
-  resolve: {
-    extensions: ['.ts', '.js', '.vue'],
+};
+
+/**
+ * NestJs uses a custom wrapper around require() that allows it to show a
+ * warning when some extra package needs to be installed. This causes problems
+ * with webpack, so we're blacklisting packages we're not using with the
+ * IgnorePlugin below.
+ *
+ * To de-blacklist a package, just remove it from this array.
+ */
+const nestBlacklist = [
+  '^cache-manager$',
+  '^@nestjs/microservices$',
+  // packages below are required from microservices
+  '^amqp-connection-manager$',
+  '^amqplib$',
+  '^grpc$',
+  '^mqtt$',
+  '^nats$',
+  '^redis$',
+];
+
+module.exports = ({ mode = 'development' }) => ([
+  {
+    name: 'client',
+    target: 'web',
+    mode,
+    entry: {
+      app: client.src.app + 'main.ts',
+    },
+    output: {
+      path: client.dist.app,
+    },
+    optimization: {
+      runtimeChunk: 'single',
+    },
+    resolve: {
+      extensions: ['.ts', '.js', '.vue'],
+      plugins: [
+        new TSConfigPathsPlugin({
+          configFile: client.src.rootDir + 'tsconfig.json',
+        }),
+      ],
+    },
+    context: client.src.rootDir,
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          include: client.src.rootDir,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'ts-loader',
+              options: {
+                happyPackMode: true,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+          },
+        },
+        {
+          test: /\.s?[ac]ss$/,
+          use: [
+            'style-loader',
+            'css-loader',
+            'sass-loader',
+          ],
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+          loader: 'file-loader',
+          options: {
+            name: 'assets/[name].[hash].[ext]',
+          },
+        },
+      ],
+    },
     plugins: [
-      new TSConfigPathsPlugin({
-        configFile: client.src.rootDir + 'tsconfig.json',
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        favicon: client.src.app + 'assets/logo.png',
+        title: APP_NAME,
+      }),
+      new VueLoaderPlugin(),
+    ],
+  },
+  {
+    name: 'server',
+    mode,
+    target: 'node',
+    entry: server.src.rootDir + 'main.ts',
+    externals: [nodeExternals()],
+    output: {
+      path: server.dist.rootDir,
+      filename: 'server.js',
+    },
+    resolve: {
+      extensions: ['.ts', '.js'],
+      plugins: [
+        new TSConfigPathsPlugin({
+          configFile: './tsconfig.build.json',
+        }),
+      ],
+    },
+    context: server.src.rootDir,
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+          },
+        },
+        {
+          test: /\.ts$/,
+          include: server.src.rootDir,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'ts-loader',
+              options: {
+                happyPackMode: true,
+              },
+            },
+          ],
+        },
+      ],
+    },
+    plugins: [
+      new IgnorePlugin({
+        contextRegExp: /@nestjs/,
+        resourceRegExp: new RegExp(nestBlacklist.join('|')),
       }),
     ],
   },
-  context: client.src.rootDir,
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        include: client.src.rootDir,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              happyPackMode: true,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.s?[ac]ss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'sass-loader',
-        ],
-      },
-      {
-        test: /\.(png|ico|jpg)/,
-        loader: 'file-loader',
-      },
-    ],
-  },
-  plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({
-      favicon: client.src.app + 'assets/logo.png',
-      title: APP_NAME,
-    }),
-    new VueLoaderPlugin(),
-  ],
-});
+]);
