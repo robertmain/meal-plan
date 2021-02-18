@@ -113,6 +113,7 @@ module.exports = ({ mode = 'development' }) => ([
           loader: 'file-loader',
           options: {
             name: 'assets/[name].[hash].[ext]',
+            esModule: false,
           },
         },
       ],
