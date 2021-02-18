@@ -4,9 +4,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const { name } = require('./package.json');
 const { sep } = require('path');
 const WebpackStylish = require('webpack-stylish');
+const {
+  APP_NAME,
+} = process.env;
 
 const client = {
   src: {
@@ -85,9 +87,7 @@ module.exports = ({ mode = 'development' }) => ({
     new HtmlWebpackPlugin({
       minify: mode !== 'development',
       favicon: client.src.app + 'assets/logo.png',
-      title: name.split(/-/)
-        .map((word) => word[0].toUpperCase() + word.slice(1))
-        .join(' '),
+      title: APP_NAME,
     }),
     new VueLoaderPlugin(),
     new WebpackStylish(),
