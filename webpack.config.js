@@ -85,7 +85,6 @@ module.exports = ({ mode = 'development' }) => ({
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      minify: mode !== 'development',
       favicon: client.src.app + 'assets/logo.png',
       title: APP_NAME,
     }),
