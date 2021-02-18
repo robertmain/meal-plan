@@ -67,10 +67,11 @@ module.exports = ({ mode = 'development' }) => ({
         },
       },
       {
-        test: /\.css$/,
+        test: /\.s?[ac]ss$/,
         use: [
-          'vue-style-loader',
+          'style-loader',
           'css-loader',
+          'sass-loader',
         ],
       },
       {
