@@ -1,11 +1,10 @@
 const { resolve: _resolve } = require('path');
-const { ProgressPlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { sep } = require('path');
-const WebpackStylish = require('webpack-stylish');
+
 const {
   APP_NAME,
 } = process.env;
@@ -89,7 +88,5 @@ module.exports = ({ mode = 'development' }) => ({
       title: APP_NAME,
     }),
     new VueLoaderPlugin(),
-    new WebpackStylish(),
-    new ProgressPlugin(),
   ],
 });
