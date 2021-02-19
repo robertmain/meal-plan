@@ -2,6 +2,7 @@ const { resolve: _resolve, sep } = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackRootElementPlugin = require('html-webpack-root-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const nodeExternals = require('webpack-node-externals');
 const { IgnorePlugin } = require('webpack');
@@ -122,8 +123,8 @@ module.exports = ({ mode = 'development' }) => ([
       new HtmlWebpackPlugin({
         favicon: client.src.app + 'assets/logo.png',
         title: APP_NAME,
-        templateContent: '<div id="app"></div></body></html>',
       }),
+      new HtmlWebpackRootElementPlugin('app'),
       new VueLoaderPlugin(),
     ],
   },
