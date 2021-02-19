@@ -1,5 +1,5 @@
-const client = require('./src/client/webpack.config');
-const server = require('./src/server/webpack.config');
+const { config: client } = require('./src/client/webpack.config');
+const { config: server } = require('./src/server/webpack.config');
 
 /**
  * Webpack Build File

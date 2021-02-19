@@ -3,7 +3,7 @@ const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 const { IgnorePlugin } = require('webpack');
 
-const config = {
+const paths = {
   src: _resolve(__dirname) + sep,
   dist: _resolve(__dirname, '..', '..', 'dist'),
 };
@@ -36,14 +36,14 @@ const nestBlacklist = [
  * @param {object} webpackEnv Webpack env object (basically any/all options passed in via the CLI)
  * @param {object} processEnv Process env object (environment variables from process.env)
  */
-module.exports = ({ mode = 'none' }) => ({
+const config = ({ mode = 'none' }) => ({
   name: 'server',
   mode,
   target: 'node',
-  entry: config.src + 'main.ts',
+  entry: paths.src + 'main.ts',
   externals: [nodeExternals()],
   output: {
-    path: config.dist,
+    path: paths.dist,
     filename: 'server.js',
   },
   resolve: {
@@ -54,7 +54,7 @@ module.exports = ({ mode = 'none' }) => ({
       }),
     ],
   },
-  context: config.src,
+  context: paths.src,
   module: {
     rules: [
       {
@@ -66,7 +66,7 @@ module.exports = ({ mode = 'none' }) => ({
       },
       {
         test: /\.ts$/,
-        include: config.src,
+        include: paths.src,
         exclude: /node_modules/,
         use: [
           {
@@ -86,3 +86,8 @@ module.exports = ({ mode = 'none' }) => ({
     }),
   ],
 });
+
+module.exports = {
+  config,
+  paths,
+};

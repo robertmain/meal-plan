@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackRootElementPlugin = require('html-webpack-root-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
-const config = {
+const paths = {
   src: {
     rootDir: _resolve(__dirname) + sep,
     app: _resolve(__dirname, 'app') + sep,
@@ -24,15 +24,15 @@ const config = {
  * @param {object} webpackEnv Webpack env object (basically any/all options passed in via the CLI)
  * @param {object} processEnv Process env object (environment variables from process.env)
  */
-module.exports = ({ mode = 'none' }, { APP_NAME } = {}) => ({
+const config = ({ mode = 'none' }, { APP_NAME } = {}) => ({
   name: 'client',
   target: 'web',
   mode,
   entry: {
-    app: config.src.app + 'main.ts',
+    app: paths.src.app + 'main.ts',
   },
   output: {
-    path: config.dist.app,
+    path: paths.dist.app,
   },
   optimization: {
     runtimeChunk: 'single',
@@ -41,16 +41,16 @@ module.exports = ({ mode = 'none' }, { APP_NAME } = {}) => ({
     extensions: ['.ts', '.js', '.vue'],
     plugins: [
       new TSConfigPathsPlugin({
-        configFile: config.src.rootDir + 'tsconfig.json',
+        configFile: paths.src.rootDir + 'tsconfig.json',
       }),
     ],
   },
-  context: config.src.rootDir,
+  context: paths.src.rootDir,
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        include: config.src.rootDir,
+        include: paths.src.rootDir,
         exclude: /node_modules/,
         use: [
           {
@@ -93,10 +93,15 @@ module.exports = ({ mode = 'none' }, { APP_NAME } = {}) => ({
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      favicon: config.src.app + 'assets/logo.png',
+      favicon: paths.src.app + 'assets/logo.png',
       title: APP_NAME,
     }),
     new HtmlWebpackRootElementPlugin('app'),
     new VueLoaderPlugin(),
   ],
 });
+
+module.exports = {
+  config,
+  paths,
+};
