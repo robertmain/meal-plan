@@ -27,10 +27,10 @@ services:
     user: "1000:1000"
     ports:
       - "127.0.0.1:${SERVER_PORT}:${SERVER_PORT}"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ".:/node:rw"
-      - "./dist/public:/node/src/server/client:ro"
-    command: ["npm", "run", "start:dev"]
+    command: ["npm", "run", "start:server:dev", "&", "npm", "run", "start:client:dev"]
     links:
       - postgres
     depends_on:

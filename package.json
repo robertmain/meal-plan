@@ -6,13 +6,8 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack",
-    "build:client": "webpack --config-name client",
-    "build:server": "webpack --config-name server",
-    "start": "ts-node -r tsconfig-paths/register src/server/main.ts",
-    "start:dev": "nodemon; webpack --config-name client --watch",
-    "start:debug": "nodemon --config nodemon-debug.json",
-    "prestart:prod": "npm run build",
-    "start:prod": "node dist/server.js",
+    "start:server:dev": "nodemon",
+    "start:client:dev": "webpack-dev-server --config webpack.dev.config.js --config-name=client",
     "lint": "eslint src/**/*.{ts,vue}",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -100,8 +95,9 @@
     "vue-loader": "^15.9.6",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.12",
-    "webpack-cli": "^4.5.0",
     "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.2",
     "webpack-node-externals": "^2.5.2"
   },
   "jest": {
