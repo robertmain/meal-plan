@@ -1,27 +1,34 @@
 <template>
   <nav>
-    <el-menu default-active="1" mode="horizontal">
+    <el-menu
+      mode="horizontal"
+      :default-active="$route.name"
+      router
+    >
       <el-menu-item>
         <img
           src="@/assets/logo.png"
           alt="Application logo"
         >
       </el-menu-item>
-      <router-link
+      <el-menu-item
         v-for="(route, index) in routes"
-        class="el-menu-item"
         :key="index"
-        :to="route.routerConfig"
-        exact-active-class="is-active"
+        :index="route.routerConfig.name"
+        :route="route.routerConfig"
       >
         <i :class="route.icon" /> {{ route.title }}
-      </router-link>
+      </el-menu-item>
     </el-menu>
   </nav>
 </template>
 
 <style lang="scss" scoped>
-img { max-height: 50px }
+.el-menu-item img{
+  height: 50px;
+  width: 30px;
+  object-fit: contain;
+}
 </style>
 
 <script lang="ts">
