@@ -1,50 +1,14 @@
 import {
   MigrationInterface,
   QueryRunner,
-  Table,
 } from 'typeorm';
 
 export class CreateIngredientsTable1555981124297 implements MigrationInterface {
-  private ingredientTable: Table = new Table({
-    name: 'ingredient',
-    columns: [
-      {
-        name: 'id',
-        type: 'int',
-        isPrimary: true,
-        isGenerated: true,
-        generationStrategy: 'increment',
-      },
-      {
-        name: 'name',
-        type: 'varchar',
-        isNullable: false,
-      },
-      {
-        name: 'createdAt',
-        type: 'timestamp',
-        default: 'NOW()',
-        isNullable: false,
-      },
-      {
-        name: 'updatedAt',
-        type: 'timestamp',
-        default: 'NOW()',
-        isNullable: false,
-      },
-      {
-        name: 'deletedAt',
-        type: 'timestamp',
-        isNullable: true,
-      },
-    ],
-  })
-
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.createTable(this.ingredientTable);
+    await queryRunner.query('CREATE TABLE "ingredient" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "name" text NOT NULL, CONSTRAINT "PK_6f1e945604a0b59f56a57570e98" PRIMARY KEY ("id"))');
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(this.ingredientTable);
+    await queryRunner.query('DROP TABLE "ingredient"');
   }
 }
