@@ -96,6 +96,9 @@ const config = ({ mode = 'none' }, { APP_NAME = '', BASE_URL = '/' } = {}) => ({
     new HtmlWebpackPlugin({
       favicon: paths.src.app + 'assets/logo.png',
       title: APP_NAME,
+      meta: {
+        viewport: 'width=device-width, initial-scale=1, user-scalable=no shrink-to-fit=no',
+      },
     }),
     new HtmlWebpackRootElementPlugin('app'),
     new VueLoaderPlugin(),
