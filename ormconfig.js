@@ -1,20 +1,20 @@
 const {
-  DB_HOSTNAME,
+  DB_HOST,
   DB_PORT,
-  DB_DATABASE,
-  DB_USERNAME,
-  DB_PASSWORD,
+  DB_NAME,
+  DB_USER,
+  DB_PASS,
 } = process.env;
 
 module.exports = {
   type: 'postgres',
-  host: DB_HOSTNAME,
+  host: DB_HOST,
   port: DB_PORT,
-  username: DB_USERNAME,
-  password: DB_PASSWORD,
-  database: DB_DATABASE,
-  entities: ['src/**/*.entity{.ts,.js}'],
-  migrations: ['src/migrations/*.ts'],
+  username: DB_USER,
+  password: DB_PASS,
+  database: DB_NAME,
+  entities: ['src/server/**/*.entity{.ts,.js}'],
+  migrations: ['src/server/migrations/*.ts'],
   cli: {
     migrationsDir: 'src/server/migrations',
   },

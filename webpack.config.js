@@ -1,86 +1,23 @@
-
-const { IgnorePlugin, optimize } = require('webpack');
-const path = require('path');
-const nodeExternals = require('webpack-node-externals');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const { config: client } = require('./src/client/webpack.config');
+const { config: server } = require('./src/server/webpack.config');
 
 /**
- * NestJs uses a custom wrapper around require() that allows it to show a
- * warning when some extra package needs to be installed. This causes problems
- * with webpack, so we're blacklisting packages we're not using with the
- * IgnorePlugin below.
+ * Webpack Build File
  *
- * To de-blacklist a package, just remove it from this array.
+ * This webpack configuration is used for only building the client and server
+ * bundles. It imports both of these from their respective directories, but
+ * allows for overrides if required.
+ *
+ * Other dev tools such as watching, hot module reloading etc. has been split
+ * out into other config files
+ *
+ * @param {object} env Webpack `env` object
  */
-const nestBlacklist = [
-  '^class-validator$',
-  '^class-transformer$',
-  '^cache-manager$',
-  '^@nestjs/microservices$',
-  // packages below are required from microservices
-  '^amqp-connection-manager$',
-  '^amqplib$',
-  '^grpc$',
-  '^mqtt$',
-  '^nats$',
-  '^redis$',
-];
-
-const resolve = {
-  extensions: ['.ts', '.tsx', '.js', '.jsx'],
-  plugins: [
-    new TSConfigPathsPlugin(),
-  ],
-};
-
-module.exports = ({ mode = 'development' }) => ({
-  mode,
-  entry: ['./src/main.ts'],
-  externals: [nodeExternals()],
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'server.js',
+module.exports = ({ mode = 'development' } = {}) => ([
+  {
+    ...client({ mode }, process.env),
   },
-  resolve,
-  context: path.resolve(__dirname),
-  target: 'node',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
-      },
-      {
-        test: /\.tsx?$/,
-        include: path.resolve(__dirname, 'src'),
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              happyPackMode: true,
-            },
-          },
-        ],
-      },
-    ],
+  {
+    ...server({ mode }, process.env),
   },
-  plugins: [
-    new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: true,
-      verbose: mode === 'development',
-    }),
-    new IgnorePlugin({
-      contextRegExp: /@nestjs/,
-      resourceRegExp: new RegExp(nestBlacklist.join('|')),
-    }),
-    new optimize.ModuleConcatenationPlugin(),
-  ],
-  node: {
-    __dirname: false,
-  },
-});
+]);

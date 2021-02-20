@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { name, description, version } from '../package.json';
 
 const { SERVER_PORT, NODE_ENV } = process.env;
 
@@ -10,15 +9,10 @@ const { SERVER_PORT, NODE_ENV } = process.env;
   const app = await NestFactory.create(AppModule);
 
   if (NODE_ENV !== 'production') {
-    const options = new DocumentBuilder()
-      .setTitle((name[0].toUpperCase() + name.slice(1)).replace(/-/gi, ' '))
-      .setDescription(description)
-      .setVersion(version)
-      .addTag('ingredient')
-      .build();
+    const options = new DocumentBuilder().build();
 
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup('docs', app, document);
   }
 
   app.useGlobalPipes(new ValidationPipe({
@@ -29,5 +23,6 @@ const { SERVER_PORT, NODE_ENV } = process.env;
         .map(([, value]): string => value)).join()
     ),
   }));
+  app.setGlobalPrefix('api');
   await app.listen(SERVER_PORT);
 })();

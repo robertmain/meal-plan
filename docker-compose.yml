@@ -4,11 +4,11 @@ services:
   postgres:
     image: postgres:10.7
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:${DB_PORT}:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
     volumes:
       - "postgres_data:/var/lib/postgresql/data"
   node:
@@ -17,19 +17,20 @@ services:
       target: base
     environment:
       - APP_NAME
-      - DB_HOSTNAME
+      - DB_HOST
       - DB_PORT
-      - DB_DATABASE
-      - DB_USERNAME
-      - DB_PASSWORD
+      - DB_NAME
+      - DB_USER
+      - DB_PASS
       - NODE_ENV
       - SERVER_PORT
     user: "1000:1000"
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:${SERVER_PORT}:${SERVER_PORT}"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ".:/node:rw"
-    command: ["npm", "run", "start"]
+    command: ["npm", "run", "start:server:dev", "&", "npm", "run", "start:client:dev"]
     links:
       - postgres
     depends_on:
