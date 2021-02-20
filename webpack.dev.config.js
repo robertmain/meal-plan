@@ -45,7 +45,7 @@ module.exports = ({ mode = 'development' } = {}) => ([
       hot: true,
       hotOnly: true,
       proxy: {
-        '/api': `http://localhost:${SERVER_PORT}/api`,
+        '/api': `http://localhost:${SERVER_PORT}/`,
       },
     },
   },

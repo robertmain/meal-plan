@@ -12,7 +12,7 @@ const { SERVER_PORT, NODE_ENV } = process.env;
     const options = new DocumentBuilder().build();
 
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('api', app, document);
+    SwaggerModule.setup('docs', app, document);
   }
 
   app.useGlobalPipes(new ValidationPipe({
@@ -23,5 +23,6 @@ const { SERVER_PORT, NODE_ENV } = process.env;
         .map(([, value]): string => value)).join()
     ),
   }));
+  app.setGlobalPrefix('api');
   await app.listen(SERVER_PORT);
 })();
