@@ -56,14 +56,10 @@ describe('Base Service', (): void => {
       expect(ingredient).toBeTruthy();
     });
     it('omits deleted entities from query results', async (): Promise<void> => {
-      const where = {
-        ...excludeDeleted,
-      };
-
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
-        .findByIds(It.isAny(), It.isObjectWith({ where })))
+        .findByIds(It.isAny(), It.isObjectWith({ where: excludeDeleted })))
         .returns((): Promise<Entity[]> => Promise.reject(
-          new EntityNotFoundError(BaseEntity, where)
+          new EntityNotFoundError(BaseEntity, excludeDeleted)
         ))
         .verifiable();
 
@@ -94,10 +90,8 @@ describe('Base Service', (): void => {
   });
   describe('findAll', (): void => {
     it('returns all non-deleted entities', async (): Promise<void> => {
-      const where = { ...excludeDeleted };
-
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
-        .find(It.isValue({ where })))
+        .find(It.isValue({ where: excludeDeleted })))
         .returns((): Promise<Entity[]> => Promise.resolve(
           new Array(10).fill(mockEntity)
         ))
@@ -108,34 +102,31 @@ describe('Base Service', (): void => {
       expect(entities).toHaveLength(10);
     });
     it('omits deleted entities from query results', async (): Promise<void> => {
-      const where = { ...excludeDeleted };
-
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
-        .find(It.isValue({ where })))
+        .find(It.isValue({ where: excludeDeleted })))
         .returns((): Promise<Entity[]> => Promise.resolve([]))
         .verifiable();
 
       await service.findAll();
     });
     it('can be overridden to return deleted entities', async (): Promise<void> => {
-      const where = {};
-
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
-        .find(It.isValue({ where })))
+        .find(It.isValue({ where: {} })))
         .returns((): Promise<Entity[]> => Promise.resolve([]))
         .verifiable();
 
       await service.findAll(true);
     });
     it('allows custom find options to be passed to the repository', async (): Promise<void> => {
-      const where = { deletedAt: null };
-
       const options: FindManyOptions<Entity> = {
         relations: [],
       };
 
       repository.setup((mockRepo): Promise<Entity[]> => mockRepo
-        .find(It.isValue({ where, relations: options.relations })))
+        .find(It.isValue({
+          where: excludeDeleted,
+          relations: options.relations,
+        })))
         .returns((): Promise<Entity[]> => Promise.resolve([]))
         .verifiable();
 

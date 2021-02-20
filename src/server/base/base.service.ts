@@ -9,37 +9,25 @@ export abstract class BaseService<Entity extends BaseEntity> {
   }
 
   public async findById(
-    includeDeleted: boolean = false,
     ids: string[],
+    withDeleted = false,
     options: FindManyOptions<Entity> = {}
   ): Promise<Entity[]> {
-    const where = {
-      deletedAt: null,
-    };
-
-    if (includeDeleted) {
-      delete where.deletedAt;
-    }
-
     const records = await this.repository.findByIds(ids, {
       ...options,
-      where,
+      withDeleted,
     });
 
     return records;
   }
 
   public async findAll(
-    includeDeleted: boolean = false,
+    withDeleted = false,
     options: FindManyOptions<Entity> = {}
   ): Promise<Entity[]> {
-    const where = { deletedAt: null };
-    if (includeDeleted) {
-      delete where.deletedAt;
-    }
     const records = await this.repository.find({
       ...options,
-      where,
+      withDeleted,
     });
     return records;
   }

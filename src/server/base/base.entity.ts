@@ -1,7 +1,7 @@
 import {
-  Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   PrimaryColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
@@ -20,6 +20,6 @@ export abstract class BaseEntity {
   public updatedAt?: Date;
 
   @Exclude()
-  @Column('timestamp')
+  @DeleteDateColumn()
   public deletedAt?: Date = null;
 }
