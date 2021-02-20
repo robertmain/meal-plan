@@ -13,7 +13,7 @@ const { config: server } = require('./src/server/webpack.config');
  *
  * @param {object} env Webpack `env` object
  */
-module.exports = ({ mode = 'development' }) => ([
+module.exports = ({ mode = 'development' } = {}) => ([
   {
     ...client({ mode }, process.env),
   },

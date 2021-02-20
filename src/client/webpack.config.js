@@ -4,6 +4,7 @@ const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackRootElementPlugin = require('html-webpack-root-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { DefinePlugin } = require('webpack');
 
 const paths = {
   src: {
@@ -24,7 +25,7 @@ const paths = {
  * @param {object} webpackEnv Webpack env object (basically any/all options passed in via the CLI)
  * @param {object} processEnv Process env object (environment variables from process.env)
  */
-const config = ({ mode = 'none' }, { APP_NAME } = {}) => ({
+const config = ({ mode = 'none' }, { APP_NAME = '', BASE_URL = '/' } = {}) => ({
   name: 'client',
   target: 'web',
   mode,
@@ -98,6 +99,9 @@ const config = ({ mode = 'none' }, { APP_NAME } = {}) => ({
     }),
     new HtmlWebpackRootElementPlugin('app'),
     new VueLoaderPlugin(),
+    new DefinePlugin({
+      'process.env.BASE_URL': JSON.stringify(BASE_URL),
+    }),
   ],
 });
 
