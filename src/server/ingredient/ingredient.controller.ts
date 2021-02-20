@@ -46,7 +46,7 @@ export class IngredientController {
   @ApiOperation({ summary: 'Retrieve a single ingredient by ID' })
   @ApiOkResponse({ type: IngredientResponse, description: 'Ingredient was successfully located' })
   @ApiNotFoundResponse({ description: 'An ingredient of the requested ID could not be found' })
-  public async getOne(@Param('id') id: number): Promise<IngredientResponse> {
+  public async getOne(@Param('id') id: string): Promise<IngredientResponse> {
     const [ingredient] = await this.ingredientService.findById([id]);
 
     if (!ingredient) {
@@ -71,8 +71,8 @@ export class IngredientController {
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
   @ApiNotFoundResponse({ description: 'Thrown if attempting to update a non-existant ingredient' })
   public async update(
-    @Param('id') id: number,
-    @Body() ingredient: UpdateIngredient
+    @Param('id') id: string,
+      @Body() ingredient: UpdateIngredient
   ): Promise<Ingredient[]> {
     try {
       await this.ingredientService.findById([id]);

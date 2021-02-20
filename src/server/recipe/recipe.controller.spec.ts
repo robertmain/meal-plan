@@ -13,11 +13,17 @@ describe('Recipe Controller', (): void => {
   let controller: RecipeController;
 
   const recipeResponse: RecipeResponse = {
-    id: 273,
+    id: 'c9a3b1e1-3440-4390-8cf8-aa98a618c718',
     name: 'Beef Casserole',
     descripion: 'Rich beef stew in mushroom gravy',
     createdAt: new Date(),
-    ingredients: [12, 43, 7, 22, 692].map((ingredientId): Ingredient => ({
+    ingredients: [
+      'ac908ffa2-65fc-453b-be0f-f9591d46f19c',
+      '59a66b1d-8d8a-4466-a639-6a9ed50aae85',
+      '50912783-4c22-4a7f-a448-0bcf7bf7153d',
+      'cdc5c006-8f3d-4244-aa19-140bc9d7b6ac',
+      'aece8ff8-1f16-4e87-8292-4d1f347c8c48',
+    ].map((ingredientId): Ingredient => ({
       id: ingredientId,
       name: `Ingredient ${ingredientId}`,
       recipe: [],
@@ -103,11 +109,12 @@ describe('Recipe Controller', (): void => {
     };
 
     it('updates an existing recipe', async (): Promise<void> => {
-      await controller.update(18, recipe);
+      const uuid = 'ab338b87-5099-4ae0-930d-f8c3ed79905d';
+      await controller.update(uuid, recipe);
 
       expect(services.recipe.save).toHaveBeenCalledTimes(1);
       expect(services.recipe.save).toHaveBeenCalledWith([{
-        id: 18,
+        id: uuid,
         ...recipe,
       }]);
     });

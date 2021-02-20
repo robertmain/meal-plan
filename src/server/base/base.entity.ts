@@ -1,14 +1,17 @@
 import {
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryColumn({
+    generated: 'uuid',
+    type: 'uuid',
+  })
+  public id: string;
 
   @CreateDateColumn()
   public createdAt: Date;

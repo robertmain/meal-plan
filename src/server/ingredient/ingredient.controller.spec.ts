@@ -12,7 +12,7 @@ describe('Ingredient Controller', (): void => {
   let controller: IngredientController;
 
   const ingredientResponse: IngredientResponse = {
-    id: 523,
+    id: 'ab338b87-5099-4ae0-930d-f8c3ed79905d',
     name: 'Brown sugar',
     createdAt: new Date(),
   };
@@ -67,22 +67,23 @@ describe('Ingredient Controller', (): void => {
     it('can retrieve a single ingredient by ID', async (): Promise<void> => {
       services.ingredient.findById.mockResolvedValue([ingredientResponse]);
 
-      const ingredient = await controller.getOne(26);
+      const ingredient = await controller.getOne(ingredientResponse.id);
 
       expect(services.ingredient.findById).toHaveBeenCalledTimes(1);
-      expect(services.ingredient.findById).toHaveBeenCalledWith([26]);
+      expect(services.ingredient.findById)
+        .toHaveBeenCalledWith([ingredientResponse.id]);
       expect(ingredient).toBe(ingredientResponse);
     });
     it('handles missing ingredients by throwing a NotFoundException', async (): Promise<void> => {
       services.ingredient.findById.mockResolvedValue([]);
 
-      await expect(controller.getOne(26)).rejects
+      await expect(controller.getOne('MISSING')).rejects
         .toBeInstanceOf(NotFoundException);
     });
     it('allows un-caught exceptions to bubble', async (): Promise<void> => {
       services.ingredient.findById.mockRejectedValue(new Error('Error'));
 
-      await expect(controller.getOne(26)).rejects
+      await expect(controller.getOne('MISSING')).rejects
         .toBeInstanceOf(Error);
     });
   });
@@ -130,7 +131,7 @@ describe('Ingredient Controller', (): void => {
     });
 
     it('raises NotFoundException when attempting to update a non-existent ingredient', async (): Promise<void> => {
-      const missingIngredientId = ingredientResponse.id + 1;
+      const missingIngredientId = 'MISSING';
       services.ingredient.findById.mockRejectedValue(
         new EntityNotFoundError(Ingredient, '')
       );

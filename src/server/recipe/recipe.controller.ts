@@ -53,7 +53,7 @@ export class RecipeController {
   @ApiBadRequestResponse({ description: 'Array of validation errors' })
   @ApiNotFoundResponse({ description: 'Thrown  if the recipe being upated cannot be found' })
   public async update(
-    id: number,
+    id: string,
     @Body() recipe: UpdateRecipe
   ): Promise<RecipeResponse> {
     try {

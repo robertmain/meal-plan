@@ -11,7 +11,7 @@ import { BaseEntity, BaseService } from '.';
 
 type Entity = BaseEntity & { name: string };
 const mockEntity: Entity = {
-  id: 6,
+  id: '17b89e2b-63a1-456d-9b37-0320913b7e94',
   updatedAt: new Date(),
   createdAt: new Date(),
   deletedAt: null,
@@ -34,9 +34,9 @@ describe('Base Service', (): void => {
       providers: [
         {
           provide: BaseService,
-          useFactory: (): object => {
+          useFactory: (): BaseService<Entity> => {
             class Service extends BaseService<Entity> { }
-            return new Service(repository.object);
+            return new Service(repository.target);
           },
         },
       ],

@@ -9,8 +9,8 @@ export abstract class BaseService<Entity extends BaseEntity> {
   }
 
   public async findById(
-    ids: number[],
     includeDeleted: boolean = false,
+    ids: string[],
     options: FindManyOptions<Entity> = {}
   ): Promise<Entity[]> {
     const where = {

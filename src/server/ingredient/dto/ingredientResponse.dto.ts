@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export abstract class IngredientResponse {
   @ApiProperty()
-  public id: number;
+  public id: string;
 
   @ApiProperty()
   public name: string;

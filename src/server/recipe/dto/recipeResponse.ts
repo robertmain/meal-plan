@@ -3,7 +3,7 @@ import { Ingredient } from '../../ingredient/ingredient.entity';
 
 export abstract class RecipeResponse {
   @ApiProperty()
-  public id: number;
+  public id: string;
 
   @ApiProperty()
   public name: string;
