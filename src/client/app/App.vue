@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <header>
+    <el-header>
       <Navigation />
-    </header>
-    <main>
+    </el-header>
+    <el-main>
       <router-view />
-    </main>
+    </el-main>
   </div>
 </template>
 
@@ -15,10 +15,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Navigation from '@/components/Navigation.vue';
+import { Header, Main } from 'element-ui';
 
 @Component({
   components: {
     Navigation,
+    'el-header': Header,
+    'el-main': Main,
   },
 })
 export default class App extends Vue { }
