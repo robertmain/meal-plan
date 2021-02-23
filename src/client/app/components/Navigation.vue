@@ -32,10 +32,14 @@
 </style>
 
 <script lang="ts">
+import { Menu, MenuItem } from 'element-ui';
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
-  components: { },
+  components: {
+    'el-menu': Menu,
+    'el-menu-item': MenuItem,
+  },
 })
 export default class MyRecipes extends Vue {
   private routes = [
