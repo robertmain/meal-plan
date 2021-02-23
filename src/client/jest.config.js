@@ -16,7 +16,7 @@ module.exports = {
   },
   globals: {
     'vue-jest': {
-      babelConfig: true,
+      tsConfig: './src/client/tsconfig.json',
     },
   },
 };
