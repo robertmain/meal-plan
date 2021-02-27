@@ -60,6 +60,10 @@ describe('Ingredient Controller', (): void => {
     });
     it('returns an empty array if there are no ingredients', async (): Promise<void> => {
       services.ingredient.findAll.mockResolvedValue([]);
+
+      const returned = await controller.root();
+
+      expect(returned).toEqual([]);
     });
   });
 
