@@ -13,7 +13,7 @@ COPY --chown=node:node . .
 
 # STAGE 2: Extend the base image as a builder image
 FROM base as builder
-RUN npm run build && rm -rf node_modules && npm install --no-optional --production
+RUN npm run build -- --mode=production && rm -rf node_modules && npm install --no-optional --production
 
 # STAGE 3: Copy the 'build' directory from previous stage and run in alpine
 # Since this does not extend the base image, we need to set workdir, user, etc. again.
@@ -21,7 +21,7 @@ FROM node:10-alpine
 ARG APP_DIR=/node
 EXPOSE 3000
 WORKDIR ${APP_DIR}
-COPY --from=builder --chown=node:node $APP_DIR/dist ./dist
+COPY --from=builder --chown=node:node $APP_DIR/dist .
 COPY --from=builder --chown=node:node $APP_DIR/node_modules ./node_modules
 USER node
 CMD ["node", "./server"]

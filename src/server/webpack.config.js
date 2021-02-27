@@ -85,6 +85,9 @@ const config = ({ mode = 'none' }) => ({
       resourceRegExp: new RegExp(nestBlacklist.join('|')),
     }),
   ],
+  node: {
+    __dirname: false,
+  },
 });
 
 module.exports = {
