@@ -8,6 +8,8 @@ const { PORT, NODE_ENV } = process.env;
 (async (): Promise<void> => {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
+
   if (NODE_ENV !== 'production') {
     const options = new DocumentBuilder().build();
 
@@ -23,6 +25,5 @@ const { PORT, NODE_ENV } = process.env;
         .map(([, value]): string => value)).join()
     ),
   }));
-  app.setGlobalPrefix('api');
   await app.listen(PORT);
 })();
