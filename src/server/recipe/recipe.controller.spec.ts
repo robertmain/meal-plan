@@ -35,6 +35,7 @@ describe('Recipe Controller', (): void => {
     recipe: {
       save: jest.fn(),
       findById: jest.fn(),
+      findAll: jest.fn(),
     },
     ingredient: {
       findById: jest.fn(),
@@ -63,6 +64,50 @@ describe('Recipe Controller', (): void => {
     Object.values(services).forEach((service): void => {
       Object.entries(service)
         .forEach(([method]): void => service[method].mockReset());
+    });
+  });
+
+  describe('root', (): void => {
+    it('returns all recipes in the database', async (): Promise<void> => {
+      services.recipe.findAll.mockResolvedValue([recipeResponse]);
+
+      const returned = await controller.root();
+
+      expect(returned).toStrictEqual([recipeResponse]);
+    });
+
+    it('returns an empty array if there are no ingredients', async (): Promise<void> => {
+      services.recipe.findAll.mockResolvedValue([]);
+
+      const returned = await controller.root();
+
+      expect(returned).toStrictEqual([]);
+    });
+  });
+
+  describe('getOne', (): void => {
+    it('retrieves a single recipe by ID', async (): Promise<void> => {
+      services.recipe.findById.mockResolvedValue([recipeResponse]);
+
+      const recipe = await controller.getOne(recipeResponse.id);
+
+      expect(services.recipe.findById).toHaveBeenCalledTimes(1);
+      expect(services.recipe.findById).toHaveBeenCalledWith(
+        [recipeResponse.id]
+      );
+      expect(recipe).toBe(recipeResponse);
+    });
+    it('handles missing recipes by throwing a NotFoundException', async (): Promise<void> => {
+      services.recipe.findById.mockResolvedValue([]);
+
+      await expect(controller.getOne('MISSING')).rejects
+        .toBeInstanceOf(NotFoundException);
+    });
+    it('allows un-caught exceptions to bubble', async (): Promise<void> => {
+      services.recipe.findById.mockRejectedValue(new Error('Error'));
+
+      await expect(controller.getOne('MISSING')).rejects
+        .toBeInstanceOf(Error);
     });
   });
 
