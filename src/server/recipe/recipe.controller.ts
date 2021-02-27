@@ -6,6 +6,8 @@ import {
   Post,
   Put,
   NotFoundException,
+  Get,
+  Param,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -35,6 +37,22 @@ export class RecipeController {
   ) {
     this.recipe = recipe;
     this.ingredient = ingredient;
+  }
+
+  @Get('/')
+  @ApiOperation({ summary: 'Retrieve all recipes currently in the database' })
+  public async root(): Promise<RecipeResponse[]> {
+    return this.recipe.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Retrieve a single recipe from the database' })
+  public async getOne(@Param('id') id: string): Promise<RecipeResponse> {
+    const [recipe] = await this.recipe.findById([id]);
+    if (!recipe) {
+      throw new NotFoundException();
+    }
+    return recipe;
   }
 
   @Post()
