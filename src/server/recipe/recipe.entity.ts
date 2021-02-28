@@ -20,6 +20,13 @@ export class Recipe extends BaseEntity {
   })
   public description?: string;
 
+  @Column({
+    type: 'text',
+    default: '',
+    nullable: false,
+  })
+  public link?: string;
+
   @ManyToMany(
     (): ObjectType<Ingredient> => Ingredient,
     (ingredient): Recipe[] => ingredient.recipe
