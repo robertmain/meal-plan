@@ -1,39 +1,36 @@
 <template>
   <div id="app">
-    <el-header>
+    <header>
       <Navigation />
-    </el-header>
-    <el-main>
-      <h1>{{ pageTitle | titleCase }}</h1>
+    </header>
+    <main>
       <router-view />
-    </el-main>
+    </main>
   </div>
 </template>
-
-<style lang="scss" scoped>
-h1{ margin-bottom: 20px }
-</style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Navigation from '@/components/Navigation.vue';
-import { Header, Main } from 'element-ui';
 
 @Component({
   components: {
     Navigation,
-    'el-header': Header,
-    'el-main': Main,
-  },
-  filters: {
-    titleCase: (text: string) => text.split(' ')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' '),
   },
 })
 export default class App extends Vue {
-  private get pageTitle(): string {
-    return this.$route.name || '';
-  }
 }
 </script>
+
+<style lang="scss">
+@import '@/assets/scss/breakpoints.scss';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto:wght@500;900&display=swap');
+*{ box-sizing: border-box; }
+a, p, span, li{
+  font-family: 'Open Sans';
+}
+
+h1, h2, h3, h4, h5, h6{
+  font-family: 'Roboto';
+}
+</style>
