@@ -1,44 +1,51 @@
 <template>
   <nav>
-    <el-menu
-      mode="horizontal"
-      :default-active="$route.name"
-      router
-    >
-      <el-menu-item>
-        <img
-          src="@/assets/logo.png"
-          alt="Application logo"
-        >
-      </el-menu-item>
-      <el-menu-item
-        v-for="(route, index) in routes"
-        :key="index"
-        :index="route.routerConfig.name"
-        :route="route.routerConfig"
-      >
-        <i :class="route.icon" /> {{ route.title }}
-      </el-menu-item>
-    </el-menu>
+    <Brand
+      :logo="require('@/assets/logo.png')"
+      primary="Meal"
+      secondary="Plan"
+    />
+    <el-button icon="el-icon-menu" />
   </nav>
 </template>
 
 <style lang="scss" scoped>
-.el-menu-item img{
-  height: 50px;
-  width: 30px;
-  object-fit: contain;
+nav{
+  padding: var(--spacing-md);
+  display: grid;
+  grid-template-columns: max-content auto;
+  align-items: center;
+  border-bottom: solid 1px #e6e6e6;
+  button{
+    justify-self: right;
+  }
+  ul{
+    display: block;
+    li{
+      float: left;
+      a{
+        font-family: 'Open Sans';
+        text-decoration: none;
+        color: var(--text-dark);
+        padding: var(--spacing-md);
+        &:hover {
+          color: #AAA;
+        }
+      }
+    }
+  }
 }
 </style>
 
 <script lang="ts">
-import { Menu, MenuItem } from 'element-ui';
+import { Button } from 'element-ui';
 import { Component, Vue } from 'vue-property-decorator';
+import Brand from '@/components/Brand.vue';
 
 @Component({
   components: {
-    'el-menu': Menu,
-    'el-menu-item': MenuItem,
+    'el-button': Button,
+    Brand,
   },
 })
 export default class MyRecipes extends Vue {
