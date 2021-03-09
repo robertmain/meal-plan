@@ -26,12 +26,9 @@ export default class Home extends Vue {
 section{
   padding: var(--spacing-md);
   line-height: 2;
-}
-h2{
-  margin-top: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-  color: white;
-  font-size: 30px;
-  font-family: 'Roboto';
+  h2{
+    margin-bottom: var(--spacing-md);
+    color: white;
+  }
 }
 </style>
