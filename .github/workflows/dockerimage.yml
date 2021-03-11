@@ -1,17 +1,18 @@
 name: Docker Image CI
 
-on: 
+on:
   push:
-    tags: 
-      - v*
+    branches:
+      - master
 
 jobs:
-
   build:
-
     runs-on: [ubuntu-latest]
-
     steps:
     - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag meal-plan-${{ github.ref }}
+    - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "weeknight-cookbook" #Must be unique in Heroku
+        heroku_email: "lenswipe@gmail.com"
+        usedocker: true
