@@ -16,3 +16,4 @@ jobs:
         heroku_app_name: "weeknight-cookbook" #Must be unique in Heroku
         heroku_email: "lenswipe@gmail.com"
         usedocker: true
+        healthcheck: "https://weeknight-cookbook.herokuapp.com/api/health"
