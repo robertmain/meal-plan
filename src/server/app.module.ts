@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TerminusModule } from '@nestjs/terminus';
 import { IngredientModule } from './ingredient/ingredient.module';
 import { RecipeModule } from './recipe/recipe.module';
 import { Ingredient } from './ingredient/ingredient.entity';
 import { BaseEntity } from './base';
 import { Recipe } from './recipe/recipe.entity';
+import { HealthController } from './health.controller';
 
 const {
   DB_HOST,
@@ -38,8 +40,9 @@ const {
     }),
     IngredientModule,
     RecipeModule,
+    TerminusModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {
