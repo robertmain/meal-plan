@@ -1,3 +1,5 @@
 build:
   docker:
     web: Dockerfile
+  config:
+    DB_URL: ${DATABASE_URL}
