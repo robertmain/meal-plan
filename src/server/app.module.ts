@@ -12,6 +12,7 @@ import { Recipe } from './recipe/recipe.entity';
 import { HealthController } from './health.controller';
 
 const {
+  DATABASE_URL: DB_URL,
   DB_HOST,
   DB_PORT,
   DB_USER,
@@ -22,11 +23,13 @@ const {
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: DB_HOST,
-      port: parseInt(DB_PORT, 10),
-      username: DB_USER,
-      password: DB_PASS,
-      database: DB_NAME,
+      ...(DB_URL.length > 0 ? { url: DB_URL, ssl: true } : {
+        host: DB_HOST,
+        port: parseInt(DB_PORT, 10),
+        username: DB_USER,
+        password: DB_PASS,
+        database: DB_NAME,
+      }),
       entities: [
         BaseEntity,
         Ingredient,
