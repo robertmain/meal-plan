@@ -10,6 +10,7 @@ import { Ingredient } from './ingredient/ingredient.entity';
 import { BaseEntity } from './base';
 import { Recipe } from './recipe/recipe.entity';
 import { HealthController } from './health.controller';
+import { Event } from './recipe/event.entity';
 
 const {
   DATABASE_URL: DB_URL = '',
@@ -34,6 +35,7 @@ const {
         BaseEntity,
         Ingredient,
         Recipe,
+        Event,
       ],
       migrations: [join(__dirname, '/migration/**/*.ts')],
     }),

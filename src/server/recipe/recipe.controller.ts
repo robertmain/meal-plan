@@ -42,7 +42,12 @@ export class RecipeController {
   @Get('/')
   @ApiOperation({ summary: 'Retrieve all recipes currently in the database' })
   public async root(): Promise<RecipeResponse[]> {
-    return this.recipe.findAll();
+    return this.recipe.findAll(false, {
+      relations: ['events'],
+      order: {
+        name: 'ASC',
+      },
+    });
   }
 
   @Get(':id')

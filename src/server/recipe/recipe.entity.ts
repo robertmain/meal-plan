@@ -4,9 +4,11 @@ import {
   ManyToMany,
   JoinTable,
   ObjectType,
+  OneToMany,
 } from 'typeorm';
 import { BaseEntity } from '../base';
 import { Ingredient } from '../ingredient/ingredient.entity';
+import { Event } from './event.entity';
 
 @Entity()
 export class Recipe extends BaseEntity {
@@ -33,4 +35,11 @@ export class Recipe extends BaseEntity {
   )
   @JoinTable()
   public ingredients: Ingredient[];
+
+  @OneToMany(
+    (): ObjectType<Event> => Event,
+    (event): Recipe => event.recipe,
+    { cascade: ['insert'] }
+  )
+  public events: Event[];
 }
