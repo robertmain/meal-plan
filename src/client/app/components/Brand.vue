@@ -6,12 +6,14 @@
       :alt="`${primary + secondary} Logo`"
     >
     <h1>
-      <span class="primary">{{primary}}</span><span class="tertiary">{{secondary}}</span>
+      {{/* eslint-disable-next-line max-len */ }}
+      <span class="primary">{{ primary }}</span><span class="tertiary">{{ secondary }}</span>
     </h1>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/breakpoints.scss';
 div{
   display: grid;
   align-items: center;
@@ -23,6 +25,9 @@ div{
     font-weight: 800;
     .primary{ color: var(--app-primary) }
     .tertiary{ color: var(--text-dark) }
+    @include for-phone-only {
+      display: none;
+    }
   }
   img{
     object-fit: contain;
