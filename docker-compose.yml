@@ -23,10 +23,10 @@ services:
       - DB_USER
       - DB_PASS
       - NODE_ENV
-      - SERVER_PORT
+      - PORT
     user: "1000:1000"
     ports:
-      - "127.0.0.1:${SERVER_PORT}:${SERVER_PORT}"
+      - "127.0.0.1:${PORT}:${PORT}"
       - "127.0.0.1:8000:8000"
     volumes:
       - ".:/node:rw"

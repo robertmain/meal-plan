@@ -3,7 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { AppModule } from './app.module';
 
-const { SERVER_PORT, NODE_ENV } = process.env;
+const { PORT, NODE_ENV } = process.env;
 
 (async (): Promise<void> => {
   const app = await NestFactory.create(AppModule);
@@ -24,5 +24,5 @@ const { SERVER_PORT, NODE_ENV } = process.env;
     ),
   }));
   app.setGlobalPrefix('api');
-  await app.listen(SERVER_PORT);
+  await app.listen(PORT);
 })();
