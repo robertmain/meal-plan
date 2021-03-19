@@ -3,6 +3,7 @@ import {
   createLocalVue,
   VueClass,
   Wrapper,
+  MountOptions,
 } from '@vue/test-utils';
 import { RouteConfig } from 'vue-router';
 
@@ -11,7 +12,8 @@ const localVue = createLocalVue();
 export const shallowRender = (
   component: VueClass<Vue>,
   props: Record<string, unknown> = {},
-  $route: RouteConfig = { path: '/' }
+  $route: RouteConfig = { path: '/' },
+  mountOptions: Partial<MountOptions<Vue>> = {}
 ): Wrapper<Vue> => shallowMount(
   component,
   {
@@ -24,5 +26,6 @@ export const shallowRender = (
     mocks: {
       $route,
     },
+    ...mountOptions,
   }
 );
