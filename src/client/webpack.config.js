@@ -104,6 +104,7 @@ const config = ({ mode = 'none' }, { APP_NAME = '', BASE_URL = '/' } = {}) => ({
     new VueLoaderPlugin(),
     new DefinePlugin({
       'process.env.BASE_URL': JSON.stringify(BASE_URL),
+      'process.env.APP_NAME': JSON.stringify(APP_NAME),
     }),
   ],
 });
