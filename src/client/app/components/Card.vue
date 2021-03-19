@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="card">
     <slot />
   </div>
 </template>
@@ -14,9 +14,8 @@ export default class Home extends Vue { }
 </script>
 
 <style lang="scss" scoped>
-div{
+.card{
   padding: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
   background-color: white;
   border-radius: 2px;
   &:last-of-type{
