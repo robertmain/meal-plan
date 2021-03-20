@@ -55,6 +55,9 @@ const config = ({ mode = 'none' }) => ({
     ],
   },
   context: paths.src,
+  optimization: {
+    minimize: false,
+  },
   module: {
     rules: [
       {
