@@ -12,7 +12,7 @@ import { Recipe } from './recipe/recipe.entity';
 import { HealthController } from './health.controller';
 
 const {
-  DATABASE_URL: DB_URL,
+  DATABASE_URL: DB_URL = '',
   DB_HOST,
   DB_PORT,
   DB_USER,
