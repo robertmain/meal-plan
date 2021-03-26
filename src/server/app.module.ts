@@ -20,6 +20,12 @@ const {
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: DATABASE_URL,
+      extra: {
+        ssl: {
+          rejectUnauthorized: false,
+          sslMode: 'allow',
+        },
+      },
       entities: [
         BaseEntity,
         Ingredient,

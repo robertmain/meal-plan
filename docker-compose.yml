@@ -11,6 +11,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
     volumes:
       - "postgres_data:/var/lib/postgresql/data"
+    command: >
+      -c ssl=on 
+      -c ssl_cert_file=/etc/ssl/certs/091aaf2d 
+      -c ssl_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
   node:
     build:
       context: .
