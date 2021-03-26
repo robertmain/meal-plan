@@ -16,14 +16,10 @@ services:
       context: .
       target: base
     environment:
-      - APP_NAME
-      - DB_HOST
-      - DB_PORT
-      - DB_NAME
-      - DB_USER
-      - DB_PASS
-      - NODE_ENV
-      - PORT
+      APP_NAME: ${APP_NAME}
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}
     user: "1000:1000"
     ports:
       - "127.0.0.1:${PORT}:${PORT}"
