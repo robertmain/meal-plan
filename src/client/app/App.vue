@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div>
     <nav>
       <navmenu :links="links" />
     </nav>
