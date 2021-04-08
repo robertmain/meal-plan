@@ -1,5 +1,10 @@
 <template>
-  <ul>
+  <ul
+    :class="{
+      horizontal: isHorizontal,
+      open: isOpen,
+    }"
+  >
     <li v-for="link in links" :key="link.name">
       <router-link :to="{ name: link.name }" exact="exact" tag="a">
         <i v-if="link.meta && link.meta.icon" :class="link.meta.icon"/>
@@ -12,17 +17,36 @@
 </template>
 
 <style lang="scss" scoped>
-li{
-  a{
-    text-decoration: none;
-    padding: var(--spacing-md);
-    display: inline-block;
+ul{
+  overflow: hidden;
+  animation-duration: 3s;
+  max-height: 0px;
+  transition: max-height 0.5s ease-in-out;
+  li{
+    a{
+      text-decoration: none;
+      padding: var(--spacing-md);
+      float: left;
+      font-size: var(--paragraph-text-size-normal);
+      color: var(--text-dark-muted);
+      border-bottom: 1px solid var(--light-grey);
+      &.router-link-exact-active{
+        color: var(--text-dark);
+      }
+    }
+  }
+  li a{
     width: 100%;
-    font-size: var(--paragraph-text-size-normal);
-    color: var(--text-dark-muted);
-    border-bottom: 1px solid var(--light-grey);
-    &.router-link-exact-active{
-      color: var(--text-dark);
+    float: none;
+    display: inline-block;
+  }
+  &.open{
+    max-height: 200px;
+  }
+  &.horizontal{
+    li a{
+      float: left;
+      width: auto;
     }
   }
 }
@@ -32,6 +56,11 @@ li{
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { RouteConfig } from 'vue-router';
 
+export enum ORIENTATION {
+  VERTICAL = 'vertical',
+  HORIZONTAL = 'horizontal',
+}
+
 @Component({})
 export default class Navmenu extends Vue {
   @Prop({
@@ -39,5 +68,26 @@ export default class Navmenu extends Vue {
     default: () => [],
   })
   public links: RouteConfig[];
+
+  @Prop({
+    type: String,
+    validator: (val) => Object.values(ORIENTATION).includes(val),
+    default: ORIENTATION.VERTICAL,
+  })
+  public orientation: ORIENTATION;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  public open: boolean;
+
+  private get isHorizontal(): boolean {
+    return this.orientation === ORIENTATION.HORIZONTAL;
+  }
+
+  private get isOpen(): boolean {
+    return (this.isHorizontal) ? true : this.open;
+  }
 }
 </script>

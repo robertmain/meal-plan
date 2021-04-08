@@ -8,6 +8,8 @@ module.exports = {
   ],
   rules: {
     semi: [2, 'always'],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',
