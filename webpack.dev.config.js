@@ -35,6 +35,11 @@ module.exports = ({ mode = 'development' } = {}) => ([
     ...watchConfig,
     devServer: {
       contentBase: client.paths.dist.app,
+      disableHostCheck: true,
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
       historyApiFallback: {
         rewrites: [
           { from: /./, to: '/index.html' },
