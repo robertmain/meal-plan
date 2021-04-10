@@ -18,12 +18,15 @@
 
 <style lang="scss" scoped>
 ul{
+  display: grid;
+  grid-auto-flow: row;
   overflow: hidden;
   animation-duration: 3s;
   max-height: 0px;
   transition: max-height 0.5s ease-in-out;
   li{
     a{
+      width: 100%;
       text-decoration: none;
       padding: var(--spacing-md);
       float: left;
@@ -35,18 +38,18 @@ ul{
       }
     }
   }
-  li a{
-    width: 100%;
-    float: none;
-    display: inline-block;
-  }
   &.open{
     max-height: 200px;
   }
   &.horizontal{
-    li a{
-      float: left;
-      width: auto;
+    grid-auto-flow: column;
+    li{
+      a{
+        display: grid;
+        grid-template-rows: repeat(2, 1fr);
+        text-align: center;
+        border-bottom: none;
+      }
     }
   }
 }

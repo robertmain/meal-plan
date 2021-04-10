@@ -1,8 +1,29 @@
 <template>
   <div>
-    <nav>
-      <navmenu :links="links" />
-    </nav>
+    <navbar>
+      <img
+        :src="require('@/assets/logo.png')"
+        :alt="primary + secondary + ' logo'"
+        slot="logo"
+      >
+      <template #primary>
+        {{ primary }}
+      </template>
+      <template #secondary>
+        {{ secondary }}
+      </template>
+      <navmenu
+        orientation="horizontal"
+        :links="links"
+        slot="navmenu"
+        id="horizontal-menu"
+      />
+    </navbar>
+    <navmenu
+      :links="links"
+      id="vertical-menu"
+      :open="menuOpen"
+    />
     <router-view />
   </div>
 </template>
@@ -13,24 +34,49 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Navmenu from '@/components/Navmenu.vue';
+import Navbar from '@/components/Navbar.vue';
 import { routes } from '@/router/index';
 import { RouteConfig } from 'vue-router';
 
 @Component({
   components: {
     Navmenu,
+    Navbar,
   },
 })
 export default class App extends Vue {
+
+  private primary = '';
+
+  private secondary = '';
+
   private get links(): RouteConfig[] {
     return routes;
+  }
+
+  private mounted() {
+    const [primary, secondary] = process.env.APP_NAME.split(' ');
+
+    this.primary = primary;
+    this.secondary = secondary;
   }
 }
 </script>
 
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto:wght@500;900&display=swap');
+@import '@/assets/scss/breakpoints.scss';
 *{ box-sizing: border-box; }
+
+#horizontal-menu{
+  display: none;
+  @include for-tablet-landscape-up { display: grid;}
+}
+
+#vertical-menu{
+  display: grid;
+  @include for-tablet-landscape-up { display: none;}
+}
 
 body {
   p, li, h1, h2, h3, h4, h5, h6{
