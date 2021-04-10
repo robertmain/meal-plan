@@ -5,9 +5,19 @@
       open: isOpen,
     }"
   >
-    <li v-for="link in links" :key="link.name">
-      <router-link :to="{ name: link.name }" exact="exact" tag="a">
-        <i v-if="link.meta && link.meta.icon" :class="link.meta.icon"/>
+    <li
+      v-for="link in links"
+      :key="link.name"
+    >
+      <router-link
+        :to="{ name: link.name }"
+        exact="exact"
+        tag="a"
+      >
+        <i
+          v-if="link.meta && link.meta.icon"
+          :class="link.meta.icon"
+        />
         <span v-if="link.meta && link.meta.title">
           {{ link.meta.title }}
         </span>

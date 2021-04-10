@@ -14,6 +14,7 @@ export const shallowRender = (
   props: Record<string, unknown> = {},
   $route: RouteConfig = { path: '/' },
   mountOptions: Partial<MountOptions<Vue>> = {}
+// eslint-disable-next-line max-params
 ): Wrapper<Vue> => shallowMount(component, {
   propsData: props,
   localVue,
