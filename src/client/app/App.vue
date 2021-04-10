@@ -18,6 +18,13 @@
         slot="navmenu"
         id="horizontal-menu"
       />
+      <button
+        slot="toggle-button"
+        class="el-button"
+        @click="toggleMenu"
+      >
+        <i class="el-icon-menu" />
+      </button>
     </navbar>
     <navmenu
       :links="links"
@@ -45,6 +52,7 @@ import { RouteConfig } from 'vue-router';
   },
 })
 export default class App extends Vue {
+  private menuOpen = false;
 
   private primary = '';
 
@@ -52,6 +60,10 @@ export default class App extends Vue {
 
   private get links(): RouteConfig[] {
     return routes;
+  }
+
+  private toggleMenu(): void {
+    this.menuOpen = !this.menuOpen;
   }
 
   private mounted() {

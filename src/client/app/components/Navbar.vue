@@ -10,6 +10,7 @@
       </span>
     </h1>
     <slot name="navmenu" />
+    <slot name="toggle-button" />
   </header>
 </template>
 
@@ -39,6 +40,13 @@ h1{
   font-family: var(--heading-font-family);
   font-weight: bold;
   margin-right: var(--spacing-md);
+}
+button{
+  justify-self: right;
+  font-size: var(--paragraph-text-size-large);
+  padding: var(--spacing-sm);
+  display: initial;
+  @include for-tablet-landscape-up { display: none;}
 }
 </style>
 
