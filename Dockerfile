@@ -3,9 +3,6 @@
 # STAGE 1: Install node_modules on a stretch container
 FROM node:10-stretch as base
 ARG APP_DIR=/node
-ARG APP_NAME
-ARG BASE_URL
-ARG NODE_ENV
 EXPOSE 3000
 WORKDIR $APP_DIR
 RUN chown node:node $APP_DIR
@@ -16,6 +13,9 @@ COPY --chown=node:node . .
 
 # STAGE 2: Extend the base image as a builder image
 FROM base as builder
+ARG APP_NAME
+ARG BASE_URL
+ARG NODE_ENV
 RUN npm run build -- --mode=production && rm -rf node_modules && npm install --no-optional --production
 
 # STAGE 3: Copy the 'build' directory from previous stage and run in alpine
