@@ -4,7 +4,7 @@ import { shallowRender } from '../../jest-helpers';
 
 describe('Navbar', () => {
   it('can display the application logo', () => {
-    const navbar = shallowRender(Navbar, undefined, undefined, {
+    const navbar = shallowRender(Navbar, undefined, {
       slots: {
         logo: '<img src="" />',
       }
@@ -12,7 +12,7 @@ describe('Navbar', () => {
     expect(navbar.find('img').exists()).toBeTruthy();
   });
   it('can display the application title', () => {
-    const navbar = shallowRender(Navbar, undefined, undefined, {
+    const navbar = shallowRender(Navbar, undefined, {
       slots: {
         primary: 'Primary',
         secondary: 'Secondary',
@@ -24,7 +24,7 @@ describe('Navbar', () => {
     expect(title.text()).toBe('Primary Secondary');
   });
   it('can display the navmenu', () => {
-    const navbar = shallowRender(Navbar, undefined, undefined, {
+    const navbar = shallowRender(Navbar, undefined, {
       slots: {
         navmenu: Navmenu,
       }
