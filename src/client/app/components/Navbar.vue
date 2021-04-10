@@ -1,14 +1,14 @@
 <template>
   <header>
     <slot name="logo" />
-    <h2>
+    <h1>
       <span class="primary">
         <slot name="primary" />
       </span>
       <span class="secondary">
         <slot name="secondary" />
       </span>
-    </h2>
+    </h1>
     <slot name="navmenu" />
   </header>
 </template>

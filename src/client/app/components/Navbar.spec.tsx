@@ -18,8 +18,10 @@ describe('Navbar', () => {
         secondary: 'Secondary',
       }
     });
-    expect(navbar.find('h2').exists()).toBeTruthy();
-    expect(navbar.find('h2').text()).toBe('Primary Secondary');
+    const title = navbar.find('h1');
+
+    expect(title.exists()).toBeTruthy();
+    expect(title.text()).toBe('Primary Secondary');
   });
   it('can display the navmenu', () => {
     const navbar = shallowRender(Navbar, undefined, undefined, {
