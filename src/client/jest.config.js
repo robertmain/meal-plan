@@ -14,6 +14,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/app/$1',
   },
+  setupFiles: ['dotenv/config'],
   globals: {
     'vue-jest': {
       tsConfig: './src/client/tsconfig.json',
