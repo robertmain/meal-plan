@@ -1,3 +1,7 @@
 build:
   docker:
     web: Dockerfile
+  config:
+    APP_NAME: Weeknight Cookbook
+    BASE_URL: /
+    NODE_ENV: production
