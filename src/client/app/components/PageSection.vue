@@ -1,7 +1,7 @@
-<template functional>
-  <section :style="{ backgroundColor: props.backgroundColor }">
-    <h2 v-if="props.title">
-      {{ props.title }}
+<template>
+  <section :style="{ backgroundColor: backgroundColor }">
+    <h2 v-if="title">
+      {{ title }}
     </h2>
     <slot />
   </section>
