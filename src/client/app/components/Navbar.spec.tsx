@@ -21,7 +21,7 @@ describe('Navbar', () => {
     const title = navbar.find('h1');
 
     expect(title.exists()).toBeTruthy();
-    expect(title.text()).toBe('Primary Secondary');
+    expect(title.text()).toBe('PrimarySecondary');
   });
   it('can display the navmenu', () => {
     const navbar = shallowRender(Navbar, undefined, {

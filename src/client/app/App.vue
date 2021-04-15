@@ -6,12 +6,8 @@
         :alt="primary + secondary + ' logo'"
         slot="logo"
       >
-      <template #primary>
-        {{ primary }}
-      </template>
-      <template #secondary>
-        {{ secondary }}
-      </template>
+      <template #primary>{{ primary }}</template>
+      <template #secondary>{{ secondary }}</template>
       <navmenu
         orientation="horizontal"
         :links="links"

@@ -4,8 +4,8 @@
     <h1>
       <span class="primary">
         <slot name="primary" />
-      </span>
-      <span class="secondary">
+      </span><!--
+      --><span class="secondary">
         <slot name="secondary" />
       </span>
     </h1>
