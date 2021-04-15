@@ -16,7 +16,7 @@ describe('Page Section', () => {
     });
   });
   it('renders any content provided', () => {
-    const pageSection = shallowRender(PageSection, undefined, undefined, {
+    const pageSection = shallowRender(PageSection, undefined, {
       slots: {
         default: '<div />',
       },
