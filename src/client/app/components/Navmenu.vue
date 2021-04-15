@@ -49,7 +49,7 @@ ul{
     }
   }
   &.open{
-    max-height: 200px;
+    max-height: 100vh;
   }
   &.horizontal{
     grid-auto-flow: column;
