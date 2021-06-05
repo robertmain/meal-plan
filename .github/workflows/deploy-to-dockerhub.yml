@@ -38,4 +38,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v7
           push: true
-          tags: user/app:latest
+          tags: robertmain/mealplan:latest
