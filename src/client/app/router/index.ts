@@ -13,6 +13,15 @@ export const routes: RouteConfig[] = [
       icon: 'el-icon-house',
     },
   },
+  {
+    path: '/recipes',
+    name: 'recipes',
+    component: () => import('@/views/Home.vue'),
+    meta: {
+      title: 'Recipes',
+      icon: 'el-icon-user',
+    },
+  },
 ];
 
 const router = new VueRouter({

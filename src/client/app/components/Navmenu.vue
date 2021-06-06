@@ -34,6 +34,7 @@ ul{
   animation-duration: 3s;
   max-height: 0px;
   transition: max-height 0.5s ease-in-out;
+  background-color: var(--dirty-white);
   li{
     a{
       width: 100%;
@@ -49,10 +50,11 @@ ul{
     }
   }
   &.open{
-    max-height: 100vh;
+    max-height: 114px;
   }
   &.horizontal{
     grid-auto-flow: column;
+    background-color: white;
     li{
       a{
         display: grid;
