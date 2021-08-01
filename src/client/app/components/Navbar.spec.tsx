@@ -1,8 +1,35 @@
 import Navbar from './Navbar.vue';
-import Navmenu from './Navmenu.vue';
-import { shallowRender } from '../../jest-helpers';
+import { createFakeStore, shallowRender } from '../../jest-helpers';
+import { getters } from '@/store/modules/ui/getters';
+import { mutations } from '@/store/modules/ui/mutations';
+import { MutationTree, Store } from 'vuex';
+import { RootState } from '@/store/state';
+import { State } from '@/store/modules/ui/state';
+import { shallowMount } from '@vue/test-utils';
+
 
 describe('Navbar', () => {
+  let fakeStore: Store<RootState>;
+  let fakeGetters;
+  let fakeMutations: MutationTree<State>;
+
+  beforeEach(() => {
+    fakeMutations = Object.keys(mutations)
+    .reduce((acc, val) => {
+      acc[val] = jest.fn();
+      return acc;
+    }, {});
+    fakeGetters = Object.keys(getters)
+    .reduce((acc, val) => {
+      acc[val] = jest.fn();
+      return acc;
+    }, {})
+
+    fakeStore = createFakeStore({
+      getters: fakeGetters,
+      mutations: fakeMutations,
+    });
+  })
   it('can display the application logo', () => {
     const navbar = shallowRender(Navbar, undefined, {
       slots: {
@@ -24,12 +51,15 @@ describe('Navbar', () => {
     expect(title.text()).toBe('PrimarySecondary');
   });
   it('can display the navmenu', () => {
-    const navbar = shallowRender(Navbar, undefined, {
+    /**
+     * @todo refactor this test
+     */
+    const navbar = shallowMount(Navbar, {
       slots: {
-        navmenu: Navmenu,
-      }
+        navmenu: { template: '<ul></ul>' },
+      },
+      store: fakeStore,
     });
-
-    expect(navbar.findComponent(Navmenu).exists()).toBeTruthy();
+    expect(navbar.find('ul')).toBeTruthy();
   });
 });

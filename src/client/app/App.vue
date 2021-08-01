@@ -6,8 +6,12 @@
         :alt="primary + secondary + ' logo'"
         slot="logo"
       >
-      <template #primary>{{ primary }}</template>
-      <template #secondary>{{ secondary }}</template>
+      <template #primary>
+        {{ primary }}
+      </template>
+      <template #secondary>
+        {{ secondary }}
+      </template>
       <navmenu
         orientation="horizontal"
         :links="links"
@@ -25,7 +29,6 @@
     <navmenu
       :links="links"
       id="vertical-menu"
-      :open="menuOpen"
     />
     <router-view />
   </div>
@@ -40,6 +43,7 @@ import Navmenu from '@/components/Navmenu.vue';
 import Navbar from '@/components/Navbar.vue';
 import { routes } from '@/router/index';
 import { RouteConfig } from 'vue-router';
+import { MUTATIONS } from './store/modules/ui/mutations';
 
 @Component({
   components: {
@@ -48,8 +52,6 @@ import { RouteConfig } from 'vue-router';
   },
 })
 export default class App extends Vue {
-  private menuOpen = false;
-
   private primary = '';
 
   private secondary = '';
@@ -59,7 +61,11 @@ export default class App extends Vue {
   }
 
   private toggleMenu(): void {
-    this.menuOpen = !this.menuOpen;
+    if (this.$store.getters.isOpen) {
+      this.$store.commit(MUTATIONS.CLOSE_NAVBAR);
+    } else {
+      this.$store.commit(MUTATIONS.OPEN_NAVBAR);
+    }
   }
 
   private mounted() {

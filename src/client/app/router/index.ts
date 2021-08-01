@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
+import store from '@/store';
+import { MUTATIONS } from '@/store/modules/ui/mutations';
 
 Vue.use(VueRouter);
 
@@ -35,6 +37,10 @@ const router = new VueRouter({
       component: () => import('@/views/NotFound.vue'),
     },
   ],
+});
+
+router.afterEach(() => {
+  store.commit(MUTATIONS.CLOSE_NAVBAR);
 });
 
 export default router;

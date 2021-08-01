@@ -91,18 +91,12 @@ export default class Navmenu extends Vue {
   })
   public orientation: ORIENTATION;
 
-  @Prop({
-    type: Boolean,
-    default: false,
-  })
-  public open: boolean;
-
   private get isHorizontal(): boolean {
     return this.orientation === ORIENTATION.HORIZONTAL;
   }
 
   private get isOpen(): boolean {
-    return (this.isHorizontal) ? true : this.open;
+    return (this.isHorizontal) ? true : this.$store.getters.isOpen;
   }
 }
 </script>

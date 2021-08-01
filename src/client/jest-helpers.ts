@@ -5,9 +5,17 @@ import {
   Wrapper,
   MountOptions,
 } from '@vue/test-utils';
-import { RouteConfig } from 'vue-router';
+import VueX, { Store, StoreOptions } from 'vuex';
+import Vue from 'vue';
 
 const localVue = createLocalVue();
+localVue.use(VueX);
+
+export const createFakeStore = (
+  opts: StoreOptions<unknown>
+): Store<unknown> => new VueX.Store({
+  ...opts,
+});
 
 export const shallowRender = (
   component: VueClass<Vue>,
