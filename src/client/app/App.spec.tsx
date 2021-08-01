@@ -2,7 +2,7 @@ import { shallowRender, createFakeStore } from '../jest-helpers';
 import App from './App.vue';
 import { getters } from '@/store/modules/ui/getters';
 import { MUTATIONS, mutations } from './store/modules/ui/mutations';
-import { GetterTree, MutationTree, Store } from 'vuex';
+import { MutationTree, Store } from 'vuex';
 import { State } from './store/modules/ui/state';
 import { RootState } from './store/state';
 
