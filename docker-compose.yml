@@ -19,10 +19,8 @@ services:
     build:
       context: .
       target: base
+    env_file: ./.env
     environment:
-      APP_NAME: ${APP_NAME}
-      NODE_ENV: ${NODE_ENV}
-      PORT: ${PORT}
       DATABASE_URL: postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}
     user: "1000:1000"
     ports:
