@@ -1,8 +1,8 @@
-import { Ajax } from '@/store/types';
+import { Request } from '@/store/types';
 import { Recipe } from './types';
 
 export class State {
-  public getRecipes: Ajax;
+  public getRecipes: Request;
 
   public recipes: Recipe[] = [];
 }

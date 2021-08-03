@@ -22,13 +22,13 @@ describe('Actions', () => {
     });
   });
   describe('getRecipes', () => {
-    it('commits a mutation to indicate the start of an AJAX process', () => {
+    it('commits a mutation to indicate the start of a request', () => {
       fakeStore.dispatch(ACTION_TYPES.GET_RECIPES);
 
       expect(fakeMutations[MUTATIONS.GET_RECIPES_START])
         .toHaveBeenCalledTimes(1);
     });
-    it('commits a mutation to indicate the success of the AJAX process', async () => {
+    it('commits a mutation to indicate the success of the request', async () => {
       jest.spyOn(RecipeApi, 'getRecipes')
         .mockImplementationOnce(() => Promise.resolve({
           config: {},
@@ -43,7 +43,7 @@ describe('Actions', () => {
       expect(fakeMutations[MUTATIONS.GET_RECIPES_SUCCEEDED])
         .toHaveBeenCalledTimes(1);
     });
-    it('commits a mutation to indicate the failure of the AJAX process', async () => {
+    it('commits a mutation to indicate the failure of the request', async () => {
       const fakeError = new Error('This broke');
       jest.spyOn(RecipeApi, 'getRecipes')
         .mockImplementationOnce(() => Promise.reject(fakeError));

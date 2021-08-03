@@ -1,4 +1,4 @@
-import { AJAX_STATUS } from '@/store/types';
+import { REQUEST_STATUS } from '@/store/types';
 import { MutationTree } from 'vuex';
 import { State } from './state';
 
@@ -11,14 +11,14 @@ export enum MUTATIONS {
 export const mutations: MutationTree<State> = {
   [MUTATIONS.GET_RECIPES_START]: (state) => {
     state.getRecipes.errors = [];
-    state.getRecipes.status = AJAX_STATUS.LOADING;
+    state.getRecipes.status = REQUEST_STATUS.LOADING;
   },
   [MUTATIONS.GET_RECIPES_FAILED]: (state, errors: Error[]) => {
-    state.getRecipes.status = AJAX_STATUS.FAILED;
+    state.getRecipes.status = REQUEST_STATUS.FAILED;
     state.getRecipes.errors = errors;
   },
   [MUTATIONS.GET_RECIPES_SUCCEEDED]: (state) => {
-    state.getRecipes.status = AJAX_STATUS.SUCCEEDED;
+    state.getRecipes.status = REQUEST_STATUS.SUCCEEDED;
     state.getRecipes.errors = [];
   },
 };

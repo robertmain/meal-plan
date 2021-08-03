@@ -1,10 +1,10 @@
-import { AJAX_STATUS } from '@/store/types';
+import { REQUEST_STATUS } from '@/store/types';
 import { MUTATIONS, mutations } from './mutations';
 import { State } from './state';
 
 const {
-  [MUTATIONS.GET_RECIPES_START]: ajaxStart,
-  [MUTATIONS.GET_RECIPES_FAILED]: ajaxError,
+  [MUTATIONS.GET_RECIPES_START]: getRecipesStart,
+  [MUTATIONS.GET_RECIPES_FAILED]: getRecipesError,
 } = mutations;
 
 describe('Mutations', () => {
@@ -13,48 +13,48 @@ describe('Mutations', () => {
       const state: State = {
         recipes: [],
         getRecipes: {
-          status: AJAX_STATUS.IDLE,
+          status: REQUEST_STATUS.IDLE,
           errors: [new Error()],
         },
       };
 
-      ajaxStart(state);
+      getRecipesStart(state);
 
       expect(state.getRecipes.errors.length).toBe(0);
     });
-    it('sets the ajax status to ' + AJAX_STATUS.LOADING, () => {
+    it('sets the request status to ' + REQUEST_STATUS.LOADING, () => {
       const state: State = {
         recipes: [],
         getRecipes: {
-          status: AJAX_STATUS.IDLE,
+          status: REQUEST_STATUS.IDLE,
           errors: [],
         },
       };
 
-      ajaxStart(state);
+      getRecipesStart(state);
 
-      expect(state.getRecipes.status).toBe(AJAX_STATUS.LOADING);
+      expect(state.getRecipes.status).toBe(REQUEST_STATUS.LOADING);
     });
   });
   describe(MUTATIONS.GET_RECIPES_FAILED, () => {
-    it('sets the ajax status to ' + AJAX_STATUS.FAILED, () => {
+    it('sets the request status to ' + REQUEST_STATUS.FAILED, () => {
       const state: State = {
         recipes: [],
         getRecipes: {
-          status: AJAX_STATUS.IDLE,
+          status: REQUEST_STATUS.IDLE,
           errors: [],
         },
       };
 
-      ajaxError(state, [new Error('An error occurred')]);
+      getRecipesError(state, [new Error('An error occurred')]);
 
-      expect(state.getRecipes.status).toBe(AJAX_STATUS.FAILED);
+      expect(state.getRecipes.status).toBe(REQUEST_STATUS.FAILED);
     });
     it('sets the errors recieved in state', () => {
       const state: State = {
         recipes: [],
         getRecipes: {
-          status: AJAX_STATUS.IDLE,
+          status: REQUEST_STATUS.IDLE,
           errors: [],
         },
       };
@@ -64,7 +64,7 @@ describe('Mutations', () => {
         new Error('Another error'),
       ];
 
-      ajaxError(state, errors);
+      getRecipesError(state, errors);
 
       expect(state.getRecipes.errors).toBe(errors);
     });

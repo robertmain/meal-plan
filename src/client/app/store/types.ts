@@ -1,11 +1,11 @@
-export enum AJAX_STATUS {
+export enum REQUEST_STATUS {
   IDLE = 'IDLE',
   LOADING = 'LOADING',
   SUCCEEDED = 'SUCCEEDED',
   FAILED = 'FAILED',
 }
 
-export type Ajax = {
+export type Request = {
   errors: Error[];
-  status: AJAX_STATUS;
+  status: REQUEST_STATUS;
 }
