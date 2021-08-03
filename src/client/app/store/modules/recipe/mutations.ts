@@ -1,6 +1,7 @@
 import { REQUEST_STATUS } from '@/store/types';
 import { MutationTree } from 'vuex';
 import { State } from './state';
+import { Recipe } from './types';
 
 export enum MUTATIONS {
   GET_RECIPES_START = 'GET_RECIPES_START',
@@ -17,7 +18,8 @@ export const mutations: MutationTree<State> = {
     state.getRecipes.status = REQUEST_STATUS.FAILED;
     state.getRecipes.errors = errors;
   },
-  [MUTATIONS.GET_RECIPES_SUCCEEDED]: (state) => {
+  [MUTATIONS.GET_RECIPES_SUCCEEDED]: (state, recipes: Recipe[]) => {
+    state.recipes = recipes;
     state.getRecipes.status = REQUEST_STATUS.SUCCEEDED;
     state.getRecipes.errors = [];
   },
