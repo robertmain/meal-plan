@@ -9,7 +9,7 @@ export abstract class RecipeResponse {
   public name: string;
 
   @ApiProperty()
-  public descripion?: string;
+  public description?: string;
 
   @ApiProperty()
   public createdAt: Date;

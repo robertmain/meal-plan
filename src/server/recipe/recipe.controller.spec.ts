@@ -15,7 +15,7 @@ describe('Recipe Controller', (): void => {
   const recipeResponse: RecipeResponse = {
     id: 'c9a3b1e1-3440-4390-8cf8-aa98a618c718',
     name: 'Beef Casserole',
-    descripion: 'Rich beef stew in mushroom gravy',
+    description: 'Rich beef stew in mushroom gravy',
     createdAt: new Date(),
     ingredients: [
       'ac908ffa2-65fc-453b-be0f-f9591d46f19c',
@@ -69,7 +69,7 @@ describe('Recipe Controller', (): void => {
   describe('create', (): void => {
     const newRecipe: CreateRecipe = {
       name: recipeResponse.name,
-      description: recipeResponse.descripion,
+      description: recipeResponse.description,
     };
 
     it('creates a new recipe', async (): Promise<void> => {
@@ -105,7 +105,7 @@ describe('Recipe Controller', (): void => {
   describe('update', (): void => {
     const recipe: UpdateRecipe = {
       name: recipeResponse.name,
-      description: recipeResponse.descripion,
+      description: recipeResponse.description,
     };
 
     it('updates an existing recipe', async (): Promise<void> => {
