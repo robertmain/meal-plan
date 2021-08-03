@@ -35,6 +35,7 @@ describe('Recipe Controller', (): void => {
     recipe: {
       save: jest.fn(),
       findById: jest.fn(),
+      findAll: jest.fn(),
     },
     ingredient: {
       findById: jest.fn(),
@@ -139,6 +140,17 @@ describe('Recipe Controller', (): void => {
       await expect(controller.update(missingIngredientId, {
         name: recipeResponse.name,
       })).rejects.toBeInstanceOf(NotFoundException);
+    });
+  });
+
+  describe('findAll', (): void => {
+    it('returns all the recipes in the database', async (): Promise<void> => {
+      services.recipe.findAll.mockResolvedValue([recipeResponse]);
+
+      const recipes = await controller.findAll();
+
+      expect(services.recipe.findAll).toHaveBeenCalledTimes(1);
+      expect(recipes).toEqual([recipeResponse]);
     });
   });
 });
