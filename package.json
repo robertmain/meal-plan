@@ -26,7 +26,7 @@
     "@nestjs/typeorm": "^7.1.5",
     "axios": "^0.21.1",
     "class-transformer": "^0.3.1",
-    "class-validator": "^0.13.1",
+    "class-validator": "^0.14.0",
     "dotenv": "^7.0.0",
     "element-ui": "^2.15.0",
     "express": "^4.16.4",
